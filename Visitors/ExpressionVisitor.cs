@@ -67,7 +67,18 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
 
         if (left is IntDataType leftInt && right is IntDataType rightInt)
         {
-            return new BooleanDataType(context.GetText().Contains("<") ? (int)leftInt.GetObject() < (int)rightInt.GetObject() : (int)leftInt.GetObject() > (int)rightInt.GetObject());
+            //return new BooleanDataType(context.GetText().Contains("<") ? (int)leftInt.GetObject() < (int)rightInt.GetObject() : (int)leftInt.GetObject() > (int)rightInt.GetObject());
+            switch (context.compOp().GetText())
+            {
+                case "<":
+                    return new BooleanDataType((int)leftInt.GetObject() < (int)rightInt.GetObject());
+                case ">":
+                    return new BooleanDataType((int)leftInt.GetObject() > (int)rightInt.GetObject());
+                case ">=":
+                    return new BooleanDataType((int)leftInt.GetObject() >= (int)rightInt.GetObject());
+                case "<=":
+                    return new BooleanDataType((int)leftInt.GetObject() <= (int)rightInt.GetObject());
+            }
         }
 
         throw new InvalidOperationException("CompareExpression requires integer operands.");
@@ -78,8 +89,15 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         var left = context.expression(0).Accept(this);
         var right = context.expression(1).Accept(this);
 
-        bool isEqual = context.GetText().Contains("=") ? left.Equals(right) : !left.Equals(right);
-        return new BooleanDataType(isEqual);
+        switch (context.eqOp().GetText())
+        {
+            case "==":
+                return new BooleanDataType(left.GetObject() == right.GetObject());
+            case "!=":
+                return new BooleanDataType(left.GetObject() != right.GetObject());
+        }
+        
+        throw new NotImplementedException("Invalid equality operator.");
     }
 
     public override DataType VisitNegatedExpression(combgenParser.NegatedExpressionContext context)

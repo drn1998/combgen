@@ -36,23 +36,25 @@ combinationalExpression:    '<'
                             '>'
                             ;
 
-expression:                   expression ('*' | '/') expression   #MulExpression
-                            | expression ('+' | '-') expression   #AddExpression
-                            | expression ('<' | '>') expression   #CompareExpression
-                            | expression ('=' | '!=') expression  #EqualityExpression
-                            | '!' expression                      #NegatedExpression
-                            | '(' expression ')'                  #ParenthesizedExpression
-                            | variableAccess                      #VariableExpression
-                            | functionCall                        #FunctionCallExpression
-                            | dqString                            #StringExpression
-                            | integer                             #IntExpression
-                            | boolean                             #BooleanExpression
+expression:                   expression ('*' | '/') expression                 #MulExpression
+                            | expression ('+' | '-') expression                 #AddExpression
+                            | expression compOp expression                     #CompareExpression
+                            | expression eqOp expression                #EqualityExpression
+                            | '!' expression                                    #NegatedExpression
+                            | '(' expression ')'                                #ParenthesizedExpression
+                            | variableAccess                                    #VariableExpression
+                            | functionCall                                      #FunctionCallExpression
+                            | dqString                                          #StringExpression
+                            | integer                                           #IntExpression
+                            | boolean                                           #BooleanExpression
                             ;
 
 boolean:                    'true' | 'false';
 
 functionCall:       IDENTIFIER '(' expression (',' expression)* ')';
 dqString:           DQ_STRING;
+compOp:    '>=' | '<=' | '<' | '>';
+eqOp:      '!=' | '==';
 
 variableAccess:     VARIABLE (('[' expression ']' ('[' expression ']')?)? | ARROW '[' expression ']');
 
