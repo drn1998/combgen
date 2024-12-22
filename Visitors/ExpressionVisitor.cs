@@ -89,16 +89,23 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         var left = context.expression(0).Accept(this);
         var right = context.expression(1).Accept(this);
 
+        if (left == null || right == null)
+            throw new InvalidOperationException("Expressions cannot be null.");
+
+        var leftObject = left.GetObject();
+        var rightObject = right.GetObject();
+
         switch (context.eqOp().GetText())
         {
             case "==":
-                return new BooleanDataType(left.GetObject() == right.GetObject());
+                return new BooleanDataType(Equals(leftObject, rightObject));
             case "!=":
-                return new BooleanDataType(left.GetObject() != right.GetObject());
+                return new BooleanDataType(!Equals(leftObject, rightObject));
+            default:
+                throw new NotImplementedException($"Invalid equality operator: {context.eqOp().GetText()}.");
         }
-        
-        throw new NotImplementedException("Invalid equality operator.");
     }
+
 
     public override DataType VisitNegatedExpression(combgenParser.NegatedExpressionContext context)
     {
