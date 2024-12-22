@@ -55,4 +55,22 @@ public class InternalFunctions
         
         return expressionTrue ? args[1] : args[2];
     }
+
+    public static DataType Max(List<DataType> args)
+    {
+        if (args.Count == 0) throw new Exception("Invalid number of arguments: Must be 1 to n");
+        
+        if (args.All(arg => arg is not IntDataType)) throw new Exception("Invalid data type: Must be integer");
+        
+        return new IntDataType(args.Max(arg => (int)arg.GetObject()));
+    }
+    
+    public static DataType Min(List<DataType> args)
+    {
+        if (args.Count == 0) throw new Exception("Invalid number of arguments: Must be 1 to n");
+        
+        if (args.All(arg => arg is not IntDataType)) throw new Exception("Invalid data type: Must be integer");
+        
+        return new IntDataType(args.Min(arg => (int)arg.GetObject()));
+    }
 }
