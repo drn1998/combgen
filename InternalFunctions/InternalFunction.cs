@@ -37,4 +37,22 @@ public class InternalFunctions
         
         return new IntDataType(celsius * 9/5 + 32);
     }
+
+    // TODO Allow two arguments instead of three and return empty string at else-case
+    public static DataType If(List<DataType> args)
+    {
+        bool expressionTrue = false;
+        
+        if (args.Count != 3) throw new Exception("Invalid number of arguments: Must be 3");
+        if (args[0] is not BooleanDataType or IntDataType) throw new Exception("First argument must be boolean or integer");
+        
+        if (args[0] is BooleanDataType)
+            expressionTrue = (bool)args[0].GetObject();
+        
+        if (args[0] is IntDataType)
+            if((int)args[0].GetObject() > 0)
+                expressionTrue = true;
+        
+        return expressionTrue ? args[1] : args[2];
+    }
 }
