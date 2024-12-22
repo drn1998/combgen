@@ -1,9 +1,29 @@
-﻿namespace combgen;
+﻿using System.Text;
+using Antlr4.Runtime;
+using combgen.Parameters;
+using combgen.Visitors;
+
+namespace combgen;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        AntlrInputStream inputStream = new AntlrFileStream("../../../testsrc.combgen", Encoding.UTF8);
+        combgenLexer lexer = new combgenLexer(inputStream);
+        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+        combgenParser parser = new combgenParser(commonTokenStream);
+        combgenParser.ScriptContext scriptContext = parser.script();
+        
+        ScriptVisitor scriptVisitor = new ScriptVisitor();
+        try
+        {
+            scriptVisitor.Visit(scriptContext);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        
     }
 }
