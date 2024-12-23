@@ -1,0 +1,26 @@
+/* Sometimes, a string table should have multiple fields. This is - for example - useful when referencing names and
+   their corresponding pronoun or they have a collateral adjective. It may also be used for items which have further
+   information related to them (like a city being mentioned next to its population, area code or ZIP code). */
+   
+$person = {
+                ["Alice"; "she"; "her"], 
+                ["Bob"; "he"; "him"], 
+                ["Carol"; "she"; "her"]
+        };
+
+$object_occupation = {
+                ["model plane"; "aviation"],
+                ["collection of coins"; "numismatics"],
+                ["lenses"; "optics"]
+                };
+
+$answer = {
+                ["no"; "but"],
+                ["yes"; "and"]
+          };
+          
+<
+  "When I saw the " . $object_occupation[0] . " in " . $person[2] . " living room, I asked " . $person[0] . " if " .
+  $person[1] . " was interested in " . $object_occupation[1] . " " . $answer[1] . " " . $person[1] . " said " .
+  $answer[0] . "."
+>

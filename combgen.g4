@@ -88,4 +88,5 @@ fragment DECIMAL_PART: [0-9]+;
 DECIMAL:      NUMBER '.' DECIMAL_PART;
 
 LINE_COMMENT: '//' ~[\n]* -> skip;
+BLOCK_COMMENT : '/*' ( BLOCK_COMMENT | . )*? '*/'  -> skip ;
 WS:         [ \n\r\f]+ -> skip;

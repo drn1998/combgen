@@ -1,0 +1,14 @@
+/* Functions can be used to transform the returned value of a variable. In this (otherwise trivial) example, the
+   pronoun is needed twice, but only one of the times does it have to be written with a capital letter. To avoid having
+   the word two times (with upper and lower case), the Capitalize function is used. */
+   
+$person = {
+                ["Alice"; "she"], 
+                ["Bob"; "he"], 
+                ["Carol"; "she"]
+        };
+     
+<
+  $person[0] . " does the same almost every morning. " .
+  Capitalize($person[1]) . " always wakes up early to go outside. Later, " . $person[1] . " enjoys a cup of tea."
+>

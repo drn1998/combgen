@@ -1,0 +1,11 @@
+/* The If function can be used to conditionally return expressions. Notice that it does not influence the combinatorics
+   of the script, and will not prevent redundant or implausible combinatorial states. It can, however, be used to
+   supply additional information that is only appropriate under certain conditions. */
+   
+$low_temp = mkint(-12 - 2, 2);    // 12 to (including) 20, at an interval of 2: 12, 14, 16, 18, 20
+$rng_temp = mkint(1 - 3);         // Temperature range (default interval of 1): 1, 2, 3
+
+< 
+  "The temperature was between " . $low_temp . " and " . $low_temp + $rng_temp . " °C. " .
+  If($low_temp < 0, "(It therefore was below freezing point)", "(It was not below freezing point)")
+>
