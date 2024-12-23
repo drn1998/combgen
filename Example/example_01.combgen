@@ -1,0 +1,23 @@
+// This example is in german language; I hope to replace it with an english one, soon
+
+$doff = {"vorgestern", "gestern", "heute"}; // day offset
+
+// Example names as they are known from cryptographic protocols
+$name = {
+            ["Alice"; "sie"],
+            ["Bob"; "er"],
+            ["Carol"; "sie"],
+            ["Dave";"er"]
+         };
+
+$liked = {"sehr", "nicht"};
+$city = {"Bremen", "Köln", "Berlin", "Hamburg", "München"};
+$temperature = mkint(-8 - 4, 4);        // In celsius
+$addtemp = mkint(2-6, 2);               // To get a temperature range
+
+< 
+  "Ich war " . $doff . " mit " . $name[0] . " in " . $city . ". " . Capitalize($name[1]) . " sagte, es waren " .
+  $temperature . " bis " . $temperature + $addtemp . " °C (ca. " . CelToFah($temperature) . " - " .
+  CelToFah($temperature + $addtemp) . " °F) und " . $name[1] . " mochte es dort " . $liked .
+  If($temperature < 0, " " + If($liked == "nicht", "(es war ja auch unter dem Gefrierpunkt!)", "(obwohl es unter dem Gefrierpunkt war!)")) . "."
+>
