@@ -159,7 +159,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
         if (context.fileStringDatafield() is not null)
         {
-            string filename = context.fileStringDatafield().SQ_STRING().GetText().Substring(1, context.fileStringDatafield().SQ_STRING().GetText().Length - 2);
+            string filename = unescapeString(context.fileStringDatafield().SQ_STRING().GetText());
             
             using (StreamReader reader = new StreamReader(filename))
             {
