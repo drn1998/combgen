@@ -106,7 +106,30 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         }
     }
 
+    public override DataType VisitLogicalExpression(combgenParser.LogicalExpressionContext context)
+    {
+        var left = context.expression(0).Accept(this);
+        var right = context.expression(1).Accept(this);
 
+        if (left == null || right == null)
+            throw new InvalidOperationException("Expressions cannot be null.");
+
+        var leftObject = left.GetObject();
+        var rightObject = right.GetObject();
+
+        if (leftObject is not bool || rightObject is not bool)
+            throw new Exception("LogicalExpression requires boolean operands.");
+
+        switch (context.logOp().GetText())
+        {
+            case "and":
+                return new BooleanDataType((bool)leftObject && (bool)rightObject);
+            case "or":
+                return new BooleanDataType((bool)leftObject || (bool)rightObject);
+            default:
+                throw new NotImplementedException($"Invalid equality operator: {context.logOp().GetText()}.");
+        }
+    }
     public override DataType VisitNegatedExpression(combgenParser.NegatedExpressionContext context)
     {
         var value = context.expression().Accept(this);
@@ -137,6 +160,8 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
             bIndex = Convert.ToInt16(context.variableAccess().expression()[0].Accept(this).GetObject());
         else
             bIndex = null;
+        
+        // TODO implement arrow operator (returns list of every [aIndex] string together)
 
         return _datafields[context.variableAccess().VARIABLE().GetText()].Read(_combVal[context.variableAccess().VARIABLE().GetText()], aIndex, bIndex);
     }

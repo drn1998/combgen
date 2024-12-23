@@ -36,10 +36,13 @@ combinationalExpression:    '<'
                             '>'
                             ;
 
+// Check reasonable precedece of those expressions; implement modulus % and exponentiation ^
+
 expression:                   expression ('*' | '/') expression                 #MulExpression
                             | expression ('+' | '-') expression                 #AddExpression
-                            | expression compOp expression                     #CompareExpression
-                            | expression eqOp expression                #EqualityExpression
+                            | expression compOp expression                      #CompareExpression
+                            | expression eqOp expression                        #EqualityExpression
+                            | expression logOp expression                       #LogicalExpression
                             | '!' expression                                    #NegatedExpression
                             | '(' expression ')'                                #ParenthesizedExpression
                             | variableAccess                                    #VariableExpression
@@ -55,6 +58,7 @@ functionCall:       IDENTIFIER '(' expression (',' expression)* ')';
 dqString:           DQ_STRING;
 compOp:    '>=' | '<=' | '<' | '>';
 eqOp:      '!=' | '==';
+logOp:     'and' | 'or';
 
 variableAccess:     VARIABLE (('[' expression ']' ('[' expression ']')?)? | ARROW '[' expression ']');
 

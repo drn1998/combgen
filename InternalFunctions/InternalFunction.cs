@@ -2,7 +2,7 @@ using combgen.Datatype;
 
 namespace combgen.InternalFunctions;
 
-public class InternalFunctions
+public partial class InternalFunctions
 {
     public static DataType Capitalize(List<DataType> args)
     {
@@ -43,7 +43,7 @@ public class InternalFunctions
     {
         bool expressionTrue = false;
         
-        if (args.Count != 3) throw new Exception("Invalid number of arguments: Must be 3");
+        if (args.Count != 3 && args.Count != 2) throw new Exception("Invalid number of arguments: Must be 2 or 3");
         if (args[0] is not BooleanDataType or IntDataType) throw new Exception("First argument must be boolean or integer");
         
         if (args[0] is BooleanDataType)
@@ -53,7 +53,12 @@ public class InternalFunctions
             if((int)args[0].GetObject() > 0)
                 expressionTrue = true;
         
-        return expressionTrue ? args[1] : args[2];
+        if(args.Count == 3)
+            return expressionTrue ? args[1] : args[2];
+        if (args.Count == 2)
+            return expressionTrue ? args[1] : new StringDataType("");
+        
+        throw new Exception("Invalid number of arguments (should be unreachable!)");
     }
 
     public static DataType Max(List<DataType> args)

@@ -9,7 +9,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        AntlrInputStream inputStream = new AntlrFileStream("../../../testsrc.combgen", Encoding.UTF8);
+        AntlrInputStream inputStream = new AntlrFileStream("../../../Example/example_01.combgen", Encoding.UTF8);
         combgenLexer lexer = new combgenLexer(inputStream);
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
         combgenParser parser = new combgenParser(commonTokenStream);
