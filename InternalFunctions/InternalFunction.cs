@@ -78,4 +78,13 @@ public partial class InternalFunctions
         
         return new IntDataType(args.Min(arg => (int)arg.GetObject()));
     }
+
+    public static DataType CountElements(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+        
+        List<string> sl = (List<string>)args[0].GetObject();
+        
+        return new IntDataType(sl.Count);
+    }
 }

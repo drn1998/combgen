@@ -88,13 +88,18 @@ public class StringListDataType : DataType
     {
         lValue = new List<string>();
     }
+    
+    public StringListDataType(List<string> lValue)
+    {
+        this.lValue = new List<string>(lValue);
+    }
 
     public void AddValue(string lValue)
     {
         this.lValue.Add(lValue);
     }
     
-    public override string ToString() => string.Join(", ", lValue);
+    public override string ToString() => "list(" + lValue.Count + ") {" + string.Join(", ", lValue) + "}";
 
     public override object GetObject()
     {

@@ -2,7 +2,7 @@ namespace combgen.Parameters;
 
 public class Parameter
 {
-    private Dictionary<string, UInt16> _parameters = new Dictionary<string, UInt16>();
+    private Dictionary<string, int> _parameters = new Dictionary<string, int>();
     
     private List<string> _allowedParameters = [
         "auto-mode",
@@ -19,7 +19,7 @@ public class Parameter
         return config.ToLowerInvariant().Replace("_", "-");
     }
 
-    public void SetParameter(string parameter, UInt16 value)
+    public void SetParameter(string parameter, int value)
     {
         if(_allowedParameters.Contains(config_to_parameter(parameter)))
             _parameters[config_to_parameter(parameter)] = value;
@@ -27,7 +27,7 @@ public class Parameter
             throw new Exception($"Parameter {parameter} does not exist.");
     }
 
-    public UInt16 GetValueByParameter(string parameter)
+    public int GetValueByParameter(string parameter)
     {
         if(_allowedParameters.Contains(config_to_parameter(parameter)))
             return _parameters[config_to_parameter(parameter)];

@@ -7,10 +7,9 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
     private int _from = from;
     private int _to = to;
     private int _interval = interval;
-
     private int _count = count;
 
-    public override DataType Read(int combVal, short? aIndex, short? bIndex)
+    public override DataType Read(int combVal, int? aIndex, int? bIndex)
     {
         if (bIndex is not null) throw new ArgumentException("bIndex not applicable to integer datafield");
         

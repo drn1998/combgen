@@ -16,7 +16,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
     public record ParamField
     {
         public required string ParamName;
-        public required ushort ParamValue;
+        public required int ParamValue;
     }
 
     public record DatafieldAssignment
@@ -34,7 +34,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         foreach (var paramAssign in context.parameterAssignment())
         {
             ParamField pf = Visit(paramAssign) as ParamField;
-            _parameter.SetParameter(pf.ParamName, Convert.ToUInt16(pf.ParamValue));
+            _parameter.SetParameter(pf.ParamName, pf.ParamValue);
         }
 
         foreach (var datafieldAssign in context.datafieldAssignment())
@@ -80,7 +80,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         ParamField pf = new ParamField
         {
             ParamName = context.IDENTIFIER().GetText(),
-            ParamValue = Convert.ToUInt16(context.NUMBER().GetText())
+            ParamValue = Convert.ToInt32(context.NUMBER().GetText())
         };
 
         return pf;
@@ -105,7 +105,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
     public override object? VisitStringDatafieldExpression(combgenParser.StringDatafieldExpressionContext context)
     {
         StringDatafield.CombinationalType ct = StringDatafield.CombinationalType.Singular;
-        UInt16 count = 1;
+        int count = 1;
         StringDatafield.StringFieldOrigin sfo = StringDatafield.StringFieldOrigin.LiteralList;
         
         if (context.NUMBER() is not null)
@@ -115,7 +115,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             if (context.NPR() is not null)
                 ct = StringDatafield.CombinationalType.NPR;
             
-            count = Convert.ToUInt16(context.NUMBER().GetText());
+            count = Convert.ToInt32(context.NUMBER().GetText());
         }
 
         List<List<string>> data = Visit(context.stringDatafield()) as List<List<string>>;

@@ -155,7 +155,7 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
 
     public override DataType VisitVariableExpression(combgenParser.VariableExpressionContext context)
     {
-        short? aIndex, bIndex;
+        int? aIndex, bIndex;
 
         if(context.variableAccess().expression().Length > 0)
             aIndex = Convert.ToInt16(context.variableAccess().expression()[0].Accept(this).GetObject());
@@ -163,7 +163,7 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
             aIndex = null;
         
         if(context.variableAccess().expression().Length > 1)
-            bIndex = Convert.ToInt16(context.variableAccess().expression()[0].Accept(this).GetObject());
+            bIndex = Convert.ToInt16(context.variableAccess().expression()[1].Accept(this).GetObject());
         else
             bIndex = null;
         

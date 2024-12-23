@@ -1,14 +1,15 @@
+using System.Diagnostics;
 using combgen.Datatype;
 using combgen.Util;
 
 namespace combgen.Datafield;
 
-public class StringDatafield(StringDatafield.CombinationalType combinationalType, List<List<string>> data, UInt16 count, StringDatafield.StringFieldOrigin origin)
+public class StringDatafield(StringDatafield.CombinationalType combinationalType, List<List<string>> data, int count, StringDatafield.StringFieldOrigin origin)
     : Datafield
 {
     private List<List<string>> _data = data;
     private CombinationalType _combinationalType = combinationalType;
-    private UInt16 _count = count;
+    private int _count = count;
     private StringFieldOrigin _origin = origin;
     
     public enum CombinationalType
@@ -26,7 +27,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         OptionalString
     }
 
-    public override DataType Read(int combVal, short? aIndex, short? bIndex)
+    public override DataType Read(int combVal, int? aIndex, int? bIndex)
     {
         if (_combinationalType == CombinationalType.Singular)
         {
@@ -45,6 +46,59 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
                 
         }
         
+        List<List<string>> results = new List<List<string>>();
+        List<List<string>> dcopy = new List<List<string>>(_data);
+        List<int> pos = new List<int>(_count);
+
+        if (_combinationalType == CombinationalType.NPR)
+        {
+            // Calculate lehmer code to insert right entries into results variable
+            int totalCount = _data.Count;
+            List<int> divisors = new List<int>(_count);
+            int k = _count - 1;
+
+            for (int i = totalCount - 1; k >= 0; i--)
+            {
+                divisors.Add(Combinatorics.nPr(i, k));
+                k--;
+            }
+
+            int number = combVal;
+            
+            for (int i = 0; i < divisors.Count; i++)
+            {
+                pos.Add(number / divisors[i]);
+                number %= divisors[i];
+            }
+        }
+        // nCr logic here
+        
+        foreach (var p in pos)
+        {
+            results.Add(dcopy[p]);
+            dcopy.RemoveAt(p);
+        }
+
+        if (aIndex is null && bIndex is null)
+        {
+            return new StringListDataType(results.Select(r => r[0]).ToList());
+        }
+        
+        if (aIndex is null && bIndex is not null)   // Arrow operator
+        {
+            return new StringListDataType(results.Select(r => r[bIndex.Value]).ToList());
+        }
+
+        if (aIndex is not null && bIndex is null)
+        {
+            return new StringDataType(results[aIndex.Value][0]);
+        }
+
+        if (aIndex is not null && bIndex is not null)
+        {
+            return new StringDataType(results[aIndex.Value][bIndex.Value]);
+        }
+        
         throw new NotImplementedException("nCr/nPr read access unimplemented");
     }
 
@@ -57,7 +111,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
             case CombinationalType.NPR:
                 return Combinatorics.nPr(_data.Count, _count);
             case CombinationalType.NCR:
-                return 1;
+                throw new NotImplementedException("nCr count calculation not implemented");
             default: throw new InvalidOperationException();
         }
     }
