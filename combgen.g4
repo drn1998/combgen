@@ -51,6 +51,7 @@ expression:                   expression ('*' | '/') expression                 
                             | functionCall                                      #FunctionCallExpression
                             | dqString                                          #StringExpression
                             | integer                                           #IntExpression
+                            | float                                             #FloatExpression
                             | boolean                                           #BooleanExpression
                             ;
 

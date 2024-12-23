@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using combgen.Datatype;
 
@@ -20,6 +21,12 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
     {
         int value = int.Parse(context.integer().GetText());
         return new IntDataType(value);
+    }
+    
+    public override DataType VisitFloatExpression(combgenParser.FloatExpressionContext context)
+    {
+        float value = Convert.ToSingle(context.@float().GetText(), CultureInfo.InvariantCulture);
+        return new FloatDataType(value);
     }
 
     public override DataType VisitBooleanExpression(combgenParser.BooleanExpressionContext context)
@@ -44,13 +51,18 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
             // TODO this whole "contains" needs to be replaced with something more concise, reliable and systematic
             return new IntDataType(context.GetText().Contains("+") ? (int)leftInt.GetObject() + (int)rightInt.GetObject() : (int)leftInt.GetObject() - (int)rightInt.GetObject());
         }
+        
+        if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
+        {
+            return new FloatDataType(context.GetText().Contains("+") ? (float)leftFloat.GetObject() + (float)rightFloat.GetObject() : (float)leftFloat.GetObject() - (float)rightFloat.GetObject());
+        }
 
         if (left is StringDataType leftString && right is StringDataType rightString)
         {
             if(context.GetText().Contains("+")) return new StringDataType((string)leftString.GetObject() + (string)rightString.GetObject());
         }
 
-        throw new InvalidOperationException("AddExpression requires integer operands.");
+        throw new InvalidOperationException("AddExpression requires scalar or string operands.");
     }
 
     public override DataType VisitMulExpression(combgenParser.MulExpressionContext context)
@@ -62,8 +74,13 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         {
             return new IntDataType(context.GetText().Contains("*") ? (int)leftInt.GetObject() * (int)rightInt.GetObject() : (int)leftInt.GetObject() / (int)rightInt.GetObject());
         }
+        
+        if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
+        {
+            return new FloatDataType(context.GetText().Contains("*") ? (float)leftFloat.GetObject() * (float)rightFloat.GetObject() : (float)leftFloat.GetObject() / (float)rightFloat.GetObject());
+        }
 
-        throw new InvalidOperationException("MulExpression requires integer operands.");
+        throw new InvalidOperationException("MulExpression requires scalar operands.");
     }
 
     public override DataType VisitCompareExpression(combgenParser.CompareExpressionContext context)
@@ -84,6 +101,17 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
                     return new BooleanDataType((int)leftInt.GetObject() >= (int)rightInt.GetObject());
                 case "<=":
                     return new BooleanDataType((int)leftInt.GetObject() <= (int)rightInt.GetObject());
+            }
+        }
+        
+        if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
+        {
+            switch (context.compOp().GetText())
+            {
+                case "<":
+                    return new BooleanDataType((float)leftFloat.GetObject() < (float)rightFloat.GetObject());
+                case ">":
+                    return new BooleanDataType((float)leftFloat.GetObject() > (float)rightFloat.GetObject());
             }
         }
 
