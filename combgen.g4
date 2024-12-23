@@ -8,7 +8,7 @@ parameterAssignment:  IDENTIFIER '=' NUMBER;
 
 datafieldAssignment:  VARIABLE '=' datafieldExpression ';';
 
-datafieldExpression:   stringDatafield ((NCR | NPR) NUMBER)?     # stringDatafieldExpression
+datafieldExpression:   (ORDERED)? stringDatafield ((NCR | NPR) NUMBER)?     # stringDatafieldExpression
                      | (NUMBER ('*' | '×'))? intDatafield        # intDatafieldExpression
                      ;
 
@@ -29,6 +29,8 @@ intDatafield:         MKINT '(' integer '-' integer (',' NUMBER)? ')';
 
 integer: ('+' | '-')? NUMBER;
 float:   ('+' | '-')? DECIMAL;
+
+ORDERED:        '°';
 
 combinationalExpression:    '<'
                                 expression

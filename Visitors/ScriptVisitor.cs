@@ -120,6 +120,13 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
         List<List<string>> data = Visit(context.stringDatafield()) as List<List<string>>;
 
+        if (context.ORDERED() is null)
+        {
+            data = data
+                .OrderBy(innerList => innerList.FirstOrDefault())
+                .ToList();
+        }
+
         StringDatafield df = new StringDatafield(ct, data, count, sfo);
         
         return df;
