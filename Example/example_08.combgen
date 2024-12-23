@@ -5,9 +5,9 @@ $property = {
                 ["conductive"; "dielectric"],
                 ["transparent"; "opaque"],
                 ["low-density"; "high-density"]
-            } nPr 2;    // nCr would be more appropriate, but this has yet to be implemented
+            } nCr 2;
 
 $first = mkint(0-1);
-$second = mkint(0-1);   // Again, this should be $side = 2 * mkint(0-1); but this is unimplemented as well
+$second = mkint(0-1);   // This should be $side = 2 * mkint(0-1); but this is unimplemented so far
 
 < "The new material is " . $property[0][$first] . " and " . $property[1][$second] . "." >

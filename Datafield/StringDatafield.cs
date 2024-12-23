@@ -71,12 +71,32 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
                 number %= divisors[i];
             }
         }
-        // nCr logic here
+
+        if (_combinationalType == CombinationalType.NCR)
+        {
+            int a = _data.Count;
+            int b = _count;
+            int x = (Combinatorics.nCr(_data.Count, _count) - 1) - combVal;
+
+            for (int i = 0; i < _count; i++)
+            {
+                a--;
+                while (Combinatorics.nCr(a, b) > x)
+                {
+                    a--;
+                }
+
+                pos.Add(_data.Count - 1 - a);
+                x -= Combinatorics.nCr(a, b);
+                b--;
+            }
+        }
         
         foreach (var p in pos)
         {
             results.Add(dcopy[p]);
-            dcopy.RemoveAt(p);
+            if(_combinationalType == CombinationalType.NPR)
+                dcopy.RemoveAt(p);
         }
 
         if (aIndex is null && bIndex is null)
@@ -111,7 +131,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
             case CombinationalType.NPR:
                 return Combinatorics.nPr(_data.Count, _count);
             case CombinationalType.NCR:
-                throw new NotImplementedException("nCr count calculation not implemented");
+                return Combinatorics.nCr(_data.Count, _count);
             default: throw new InvalidOperationException();
         }
     }

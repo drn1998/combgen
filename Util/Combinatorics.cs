@@ -13,4 +13,20 @@ public class Combinatorics
 
         return result;
     }
+    public static int nCr(int n, int k)
+    {
+        if (k > n) return 0;
+        if (k == 0 || k == n) return 1;
+
+        k = Math.Min(k, n - k); // Take advantage of symmetry
+        int result = 1;
+
+        for (int i = 1; i <= k; i++)
+        {
+            result *= n--;
+            result /= i;
+        }
+
+        return result;
+    }
 }
