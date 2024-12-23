@@ -41,7 +41,13 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
 
         if (left is IntDataType leftInt && right is IntDataType rightInt)
         {
+            // TODO this whole "contains" needs to be replaced with something more concise, reliable and systematic
             return new IntDataType(context.GetText().Contains("+") ? (int)leftInt.GetObject() + (int)rightInt.GetObject() : (int)leftInt.GetObject() - (int)rightInt.GetObject());
+        }
+
+        if (left is StringDataType leftString && right is StringDataType rightString)
+        {
+            if(context.GetText().Contains("+")) return new StringDataType((string)leftString.GetObject() + (string)rightString.GetObject());
         }
 
         throw new InvalidOperationException("AddExpression requires integer operands.");
