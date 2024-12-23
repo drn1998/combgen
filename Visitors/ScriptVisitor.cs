@@ -118,6 +118,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             count = Convert.ToInt32(context.NUMBER().GetText());
         }
 
+        // TODO Exception if optional string is combined with nCr/nPr
         List<List<string>> data = Visit(context.stringDatafield()) as List<List<string>>;
 
         if (context.ORDERED() is null)
@@ -154,6 +155,15 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
                 }
                 data.Add(mb);
             }
+        }
+
+        if (context.optionalStringDatafield() is not null)
+        {
+            List<string> empty = new List<string>() {""};
+            List<string> optstr = new List<string>() {unescapeString(context.optionalStringDatafield().DQ_STRING().GetText())};
+            
+            data.Add(optstr);
+            data.Add(empty);
         }
         
         // TODO throw exception of not all lists have the same length
