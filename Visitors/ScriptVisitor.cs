@@ -157,6 +157,22 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             }
         }
 
+        if (context.fileStringDatafield() is not null)
+        {
+            string filename = context.fileStringDatafield().SQ_STRING().GetText().Substring(1, context.fileStringDatafield().SQ_STRING().GetText().Length - 2);
+            
+            using (StreamReader reader = new StreamReader(filename))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] columns = line.Split('\t');
+
+                    data.Add(new List<string>(columns));
+                }
+            }
+        }
+
         if (context.optionalStringDatafield() is not null)
         {
             List<string> empty = new List<string>() {""};
