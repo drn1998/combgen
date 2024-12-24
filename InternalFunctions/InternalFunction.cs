@@ -87,4 +87,65 @@ public partial class InternalFunctions
         
         return new IntDataType(sl.Count);
     }
+
+    public static DataType StrLen(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+
+        string str = (string)args[0].GetObject();
+        
+        return new IntDataType(str.Length);
+    }
+
+    public static DataType SphVol(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+        
+        float vol = (float) args[0].GetObject();
+        
+        if (float.IsPositive(vol))
+            return new FloatDataType(4.0f/3.0f * float.Pi * float.Pow(vol, 3));
+        
+        throw new Exception("Invalid SphVol argument (must be positive)");
+    }
+    
+    public static DataType sqrt(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+        
+        float vol = (float) args[0].GetObject();
+        
+        if (float.IsPositive(vol))
+            return new FloatDataType(float.Sqrt(vol));
+        
+        throw new Exception("Invalid sqrt argument (must be positive)");
+    }
+
+    public static DataType LeftPad(List<DataType> args)
+    {
+        if (args.Count != 2) throw new Exception("Invalid number of arguments: Must be 2 (string, int)");
+        if (args[0] is not StringDataType) throw new Exception("Invalid data type: First argument to LeftPad be a string");
+        if (args[1] is not IntDataType) throw new Exception("Invalid data type: Second argument to LeftPad be an integer");
+
+        string str = (string)args[0].GetObject();
+        int i = (int)args[1].GetObject();
+
+        if (i < str.Length) throw new Exception("Padding length is below string length.");
+
+        return new StringDataType(str.PadLeft(i));
+    }
+    
+    public static DataType RightPad(List<DataType> args)
+    {
+        if (args.Count != 2) throw new Exception("Invalid number of arguments: Must be 2 (string, int)");
+        if (args[0] is not StringDataType) throw new Exception("Invalid data type: First argument to RightPad be a string");
+        if (args[1] is not IntDataType) throw new Exception("Invalid data type: Second argument to RightPad be an integer");
+
+        string str = (string)args[0].GetObject();
+        int i = (int)args[1].GetObject();
+
+        if (i < str.Length) throw new Exception("Padding length is below string length.");
+        
+        return new StringDataType(str.PadRight(i));
+    }
 }
