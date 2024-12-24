@@ -148,4 +148,68 @@ public partial class InternalFunctions
         
         return new StringDataType(str.PadRight(i));
     }
+    public static DataType groupcat(List<DataType> args)
+    {
+        if (args.Count < 2 || args.Count > 3)
+            throw new Exception("Invalid number of arguments: Must be 2 or 3");
+
+        if (args[0] is not StringListDataType)
+            throw new Exception("Invalid data type: First argument must be a list of strings");
+
+        if (args[1] is not StringDataType)
+            throw new Exception("Invalid data type: Second argument must be a string");
+
+        List<string> stringList = (List<string>)args[0].GetObject();
+        string separator = (string)args[1].GetObject();
+
+        if (args.Count == 2)
+        {
+            return new StringDataType(string.Join(separator, stringList));
+        }
+        else if (args.Count == 3)
+        {
+            if (args[2] is not StringDataType)
+                throw new Exception("Invalid data type: Third argument must be a string");
+
+            string finalSeparator = (string)args[2].GetObject();
+
+            if (stringList.Count <= 1)
+            {
+                return new StringDataType(string.Join(separator, stringList));
+            }
+            else
+            {
+                string result = string.Join(separator, stringList.Take(stringList.Count - 1))
+                                + finalSeparator
+                                + stringList.Last();
+                return new StringDataType(result);
+            }
+        }
+
+        throw new Exception("Unexpected logic error: This point should not be reached.");
+    }
+    
+    public static DataType exclude(List<DataType> args)
+    {
+        if (args.Count != 2)
+            throw new Exception("Invalid number of arguments: Must be 2");
+
+        if (args[0] is not StringListDataType)
+            throw new Exception("Invalid data type: First argument must be a list of strings");
+
+        if (args[1] is not IntDataType)
+            throw new Exception("Invalid data type: Second argument must be an integer");
+
+        List<string> stringList = (List<string>)args[0].GetObject();
+        int indexToRemove = (int)args[1].GetObject();
+
+        if (indexToRemove < 0 || indexToRemove >= stringList.Count)
+            throw new Exception("Invalid index: Out of range");
+
+        List<string> resultList = new List<string>(stringList);
+        resultList.RemoveAt(indexToRemove);
+
+        return new StringListDataType(resultList);
+    }
+
 }
