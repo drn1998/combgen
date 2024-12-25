@@ -10,18 +10,18 @@ namespace combgen;
 public class Options
 {
     [Option('c', "count", Required = false, HelpText = "Print the number of combinations.", SetName = "output")]
-    public bool Count {get;}
+    public bool Count {get; set; }
     
     [Option('e', "enumerate", Required = false, HelpText = "Enumerate the combinations", SetName = "output")]
-    public bool Enumerate {get;}
+    public bool Enumerate {get; set; }
         
     [Option('T', "table", Required = false, HelpText = "Print the table as HTML.", SetName = "table")]
-    public string? TableFile {get;set;}
+    public string? TableFile {get; set;}
         
     [Value(0, MetaName = "input file",
         HelpText = "Input source file to be processed.",
         Required = true)]
-    public string? FileName { get; set; }
+    public string? FileName { get; set;}
 }
 class Program
 {
