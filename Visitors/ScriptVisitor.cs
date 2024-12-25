@@ -10,9 +10,14 @@ namespace combgen.Visitors;
 public class ScriptVisitor : combgenBaseVisitor<object?>
 {
     Parameter _parameter = new Parameter();
+    private Options _options;
 
     Dictionary<string, Datafield.Datafield> _datafields = new Dictionary<string, Datafield.Datafield>();
-    
+
+    public ScriptVisitor(Options opt)
+    {
+        _options = opt;
+    }
     public record ParamField
     {
         public required string ParamName;
@@ -52,24 +57,32 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
         MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(radix);
 
-        for (int i = 0; i < mixedRadixConverter.Total(); i++)
+        if (_options.Count)
         {
-            List<int> result = mixedRadixConverter.ConvertToMixedRadix(i);
-            Dictionary<string, int> values = new Dictionary<string, int>();
-
-            for (int j = 0; j < _datafields.Count; j++)
+            Console.WriteLine(mixedRadixConverter.Total());
+        } else if (_options.Enumerate)
+        {
+            for (int i = 0; i < mixedRadixConverter.Total(); i++)
             {
-                values[_datafields.ElementAt(j).Key] = result[j];
+                List<int> result = mixedRadixConverter.ConvertToMixedRadix(i);
+                Dictionary<string, int> values = new Dictionary<string, int>();
+
+                for (int j = 0; j < _datafields.Count; j++)
+                {
+                    values[_datafields.ElementAt(j).Key] = result[j];
+                }
+
+                ExpressionVisitor expressionVisitor = new ExpressionVisitor(_datafields, null, values);
+
+                string tmp = string.Empty;
+            
+                foreach (var expression in context.combinationalExpression().expression())
+                {
+                    tmp += expressionVisitor.Visit(expression).ToString();
+                }
+            
+                Console.WriteLine(tmp);
             }
-
-            ExpressionVisitor expressionVisitor = new ExpressionVisitor(_datafields, null, values);
-
-            foreach (var expression in context.combinationalExpression().expression())
-            {
-                Console.Write(expressionVisitor.Visit(expression).ToString());
-            }
-            Console.WriteLine();
-
         }
         
         return base.VisitScript(context);
