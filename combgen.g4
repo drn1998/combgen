@@ -57,7 +57,7 @@ expression:                   expression ('*' | '/') expression                 
 
 boolean:                    'true' | 'false';
 
-functionCall:       IDENTIFIER '(' expression (',' expression)* ')';
+functionCall:       IDENTIFIER '(' (expression (',' expression)*)? ')';
 dqString:           DQ_STRING;
 compOp:    '>=' | '<=' | '<' | '>';
 eqOp:      '!=' | '==';

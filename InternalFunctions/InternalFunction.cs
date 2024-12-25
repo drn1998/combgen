@@ -212,4 +212,14 @@ public partial class InternalFunctions
         return new StringListDataType(resultList);
     }
 
+    public static DataType irand(List<DataType> args)
+    {
+        Random random = new Random();
+        if (args.Count == 0) return new IntDataType(random.Next());
+        if (args.Count == 1) return new IntDataType(random.Next((int)args[0].GetObject()));
+        // Check if max is not below min
+        if (args.Count == 2) return new IntDataType(random.Next((int)args[0].GetObject(), (int)args[1].GetObject()));
+        
+        throw new Exception("irand must be called with 0, 1 or 2 arguments.");
+    }
 }
