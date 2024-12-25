@@ -7,7 +7,6 @@ $property = {
                 ["low-density"; "high-density"]
             } nCr 2;
 
-$first = mkint(0-1);
-$second = mkint(0-1);   // This should be $side = 2 * mkint(0-1); but this is unimplemented so far
+$side = 2 * mkint(0-1);
 
-< "The new material is " . $property[0][$first] . " and " . $property[1][$second] . "." >
+< "The new material is " . $property[0][$side[0]] . " and " . $property[1][$side[1]] . "." >

@@ -1,4 +1,5 @@
 using combgen.Datatype;
+using combgen.Util;
 
 namespace combgen.Datafield;
 
@@ -12,12 +13,28 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
     public override DataType Read(int combVal, int? aIndex, int? bIndex)
     {
         if (bIndex is not null) throw new ArgumentException("bIndex not applicable to integer datafield");
-        
-        return new IntDataType(from + (interval * combVal));
+
+        if (aIndex is null)
+        {
+            if (_count == 1)
+                return new IntDataType(from + interval * combVal);
+            else
+                throw new Exception("aIndex is necessary for multi-value integer data field.");
+        }
+        else
+        {
+            if (aIndex.Value >= _count) throw new Exception("aIndex is out of range of integer datafield.");
+
+            MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(Enumerable.Repeat((_to - _from) / _interval + 1, _count).ToList());
+
+            List<int> res = mixedRadixConverter.ConvertToMixedRadix(combVal);
+            
+            return new IntDataType(_from + _interval * res[aIndex.Value]);
+        }
     }
 
     public override int Count()
     {
-        return _count * ((_to - _from) / _interval + 1);
+        return Combinatorics.ipow((_to - _from) / _interval + 1, (short)_count);
     }
 }
