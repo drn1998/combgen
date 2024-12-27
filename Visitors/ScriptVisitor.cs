@@ -91,7 +91,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             
             for (int i = 0; i < _datafields.Count; i++)
             {
-                Console.WriteLine(_datafields.ElementAt(i).Value.GetTable(bases[i], true));
+                Console.WriteLine(_datafields.ElementAt(i).Value.GetTable(bases[i], true, _datafields.ElementAt(i).Key.Substring(1)));
             }
         }
         

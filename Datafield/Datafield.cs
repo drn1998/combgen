@@ -7,5 +7,5 @@ public abstract class Datafield
     public abstract DataType Read(int combVal, int? aIndex, int? bIndex);
     public abstract int Count();
 
-    public abstract string GetTable(int baseIndex, bool verbose = false);
+    public abstract string GetTable(int baseIndex, bool verbose = false, string title = "Value");
 }

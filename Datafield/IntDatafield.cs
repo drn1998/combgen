@@ -39,7 +39,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         return Combinatorics.ipow((_to - _from) / _interval + 1, (short)_count);
     }
 
-    public override string GetTable(int baseIndex, bool verbose = false)
+    public override string GetTable(int baseIndex, bool verbose = false, string title = "Value")
     {
         string output = "<table>";
         
@@ -47,7 +47,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         {
             if (_count == 1)
             {
-                output += "<tr><th>Value</th><th>Code</th></tr>";
+                output += $"<tr><th>{title}</th><th>Code</th></tr>";
         
                 for (int i = 0; i < Count(); i++)
                 {

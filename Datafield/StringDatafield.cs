@@ -137,10 +137,15 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         }
     }
 
-    public override string GetTable(int baseIndex, bool verbose = false)
+    public override string GetTable(int baseIndex, bool verbose = false, string title = "Value")
     {
+        /* TODO: In non-verbose mode, nCr and nPr shall provide values to calculate the value instead of presenting
+           every combination with its pre-calculated code (as this saves space with the tradeoff of having to do
+           manual calculations). It may also be desirable to have a enum for verbosity level instead of just the
+           boolean. */
+        
         string output = "<table>";
-        output += "<tr><th>Value</th><th>Code</th></tr>";
+        output += $"<tr><th>{title}</th><th>Code</th></tr>";
         
         for (int i = 0; i < Count(); i++)
         {
