@@ -38,7 +38,6 @@ public partial class InternalFunctions
         return new IntDataType(celsius * 9/5 + 32);
     }
 
-    // TODO Allow two arguments instead of three and return empty string at else-case
     public static DataType If(List<DataType> args)
     {
         bool expressionTrue = false;

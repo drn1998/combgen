@@ -34,6 +34,16 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
     {
         return str.Substring(1, str.Length - 2);
     }
+    
+    static bool ListsEqualLength(List<List<string>> listOfLists)
+    {
+        if (listOfLists.Count == 0)
+            return true;
+
+        int firstSize = listOfLists[0].Count;
+
+        return listOfLists.All(innerList => innerList.Count == firstSize);
+    }
     public override object? VisitScript(combgenParser.ScriptContext context)
     {
         foreach (var paramAssign in context.parameterAssignment())
@@ -141,16 +151,22 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             count = Convert.ToInt32(context.NUMBER().GetText());
         }
 
-        // TODO Exception if optional string is combined with nCr/nPr
         StringDatafieldObject sdo = Visit(context.stringDatafield()) as StringDatafieldObject;
 
         if (context.ORDERED() is null)
-        {
             sdo.Data = sdo.Data
                 .OrderBy(innerList => innerList.FirstOrDefault())
                 .ToList();
-        }
+        else
+            if (sdo.Origin == StringDatafield.StringFieldOrigin.OptionalString)
+                throw new Exception("Canonical string order cannot be applied to optional string");
 
+        if (ct is StringDatafield.CombinationalType.NPR or StringDatafield.CombinationalType.NCR && sdo.Origin == StringDatafield.StringFieldOrigin.OptionalString)
+            throw new Exception("nPr or nCr mode cannot be applied to optional string");
+
+        if (count == 0) throw new Exception("Cannot choose zero elements from string table");
+        if (count > sdo.Data.Count) throw new Exception("String table has too few elements for applied combination mode");
+        
         StringDatafield df = new StringDatafield(ct, sdo.Data, count, sdo.Origin);
         
         return df;
@@ -218,7 +234,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             data.Add(empty);
         }
         
-        // TODO throw exception of not all lists have the same length
+        if(!ListsEqualLength(data)) throw new Exception("Not all rows have the same number of columns");
         
         sdo.Data = data;
         
