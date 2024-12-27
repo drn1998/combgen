@@ -4,7 +4,7 @@
    
 $person = {
                 ["Alice"; "she"; "her"], 
-                ["Bob"; "he"; "him"], 
+                ["Bob"; "he"; "his"], 
                 ["Carol"; "she"; "her"]
         };
 
