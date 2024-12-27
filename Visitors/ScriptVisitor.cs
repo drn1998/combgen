@@ -142,26 +142,35 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         }
 
         // TODO Exception if optional string is combined with nCr/nPr
-        List<List<string>> data = Visit(context.stringDatafield()) as List<List<string>>;
+        StringDatafieldObject sdo = Visit(context.stringDatafield()) as StringDatafieldObject;
 
         if (context.ORDERED() is null)
         {
-            data = data
+            sdo.Data = sdo.Data
                 .OrderBy(innerList => innerList.FirstOrDefault())
                 .ToList();
         }
 
-        StringDatafield df = new StringDatafield(ct, data, count, sfo);
+        StringDatafield df = new StringDatafield(ct, sdo.Data, count, sdo.Origin);
         
         return df;
     }
 
+    public record StringDatafieldObject
+    {
+        public List<List<string>> Data;
+        public StringDatafield.StringFieldOrigin Origin;
+    }
+
     public override object? VisitStringDatafield(combgenParser.StringDatafieldContext context)
     {
+        StringDatafieldObject sdo = new StringDatafieldObject();
         List<List<string>> data = new List<List<string>>();
         
         if (context.literalStringDatafield() is not null)
         {
+            sdo.Origin = StringDatafield.StringFieldOrigin.LiteralList;
+
             foreach (var str in context.literalStringDatafield().DQ_STRING())
             {
                 List<string> mb = new List<string>();
@@ -182,6 +191,8 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
         if (context.fileStringDatafield() is not null)
         {
+            sdo.Origin = StringDatafield.StringFieldOrigin.File;
+            
             string filename = unescapeString(context.fileStringDatafield().SQ_STRING().GetText());
             
             using (StreamReader reader = new StreamReader(filename))
@@ -198,6 +209,8 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
         if (context.optionalStringDatafield() is not null)
         {
+            sdo.Origin = StringDatafield.StringFieldOrigin.OptionalString;
+            
             List<string> empty = new List<string>() {""};
             List<string> optstr = new List<string>() {unescapeString(context.optionalStringDatafield().DQ_STRING().GetText())};
             
@@ -207,7 +220,9 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         
         // TODO throw exception of not all lists have the same length
         
-        return data;
+        sdo.Data = data;
+        
+        return sdo;
     }
 
     public override object? VisitIntDatafieldExpression(combgenParser.IntDatafieldExpressionContext context)

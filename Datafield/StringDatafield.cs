@@ -143,18 +143,31 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
            every combination with its pre-calculated code (as this saves space with the tradeoff of having to do
            manual calculations). It may also be desirable to have a enum for verbosity level instead of just the
            boolean. */
+
+        string output = string.Empty;
         
-        string output = "<table>";
-        output += $"<tr><th>{title}</th><th>Code</th></tr>";
-        
-        for (int i = 0; i < Count(); i++)
+        if (_origin == StringFieldOrigin.LiteralList || _origin == StringFieldOrigin.File ||
+            _origin == StringFieldOrigin.SqlQuery)
         {
-            List<List<string>> curList = gencomb(i);
-            output += "<tr><td>" + string.Join(", ", curList.Select(x => x[0]).ToList()) + "</td>";
-            output += "<td>" + (baseIndex * i) + "</td></tr>";
-        }
+            output = "<table>";
+            
+            output += $"<tr><th>{title}</th><th>Code</th></tr>";
         
-        output += "</table>";
+            for (int i = 0; i < Count(); i++)
+            {
+                List<List<string>> curList = gencomb(i);
+                output += "<tr><td>" + string.Join(", ", curList.Select(x => x[0]).ToList()) + "</td>";
+                output += "<td>" + (baseIndex * i) + "</td></tr>";
+            }
+            
+            output += "</table>";
+        } else if (_origin == StringFieldOrigin.OptionalString)
+        {
+            List<List<string>> curList = gencomb(1);
+
+            output = $"<table><tr><th colspan=\"2\" style=\"text-align:center\">~&nbsp;{title}</th></tr><tr><td>{curList[0][0]}</td><td>{baseIndex}</td></tr></table>";
+
+        }
 
         return output;
     }
