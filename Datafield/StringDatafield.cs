@@ -27,69 +27,55 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         OptionalString
     }
 
-    public override DataType Read(int combVal, int? aIndex, int? bIndex)
+    private List<List<string>> gencomb(int combVal)
     {
-        if (_combinationalType == CombinationalType.Singular)
-        {
-            if (bIndex is not null)
-                throw new Exception("Invalid array access");
-            
-            if (aIndex is null)
-                return new StringDataType(_data[combVal][0]);
-            else
-            {
-                if(aIndex.Value < 0 || aIndex.Value >= _data.First().Count)
-                    throw new Exception("Invalid array access: Out of range");
-                
-                return new StringDataType(_data[combVal][aIndex.Value]);
-            }
-                
-        }
-        
         List<List<string>> results = new List<List<string>>();
         List<List<string>> dcopy = new List<List<string>>(_data);
         List<int> pos = new List<int>(_count);
 
-        if (_combinationalType == CombinationalType.NPR)
+        switch (_combinationalType)
         {
-            // Calculate lehmer code to insert right entries into results variable
-            int totalCount = _data.Count;
-            List<int> divisors = new List<int>(_count);
-            int k = _count - 1;
+            case CombinationalType.Singular:
+                results.Add(_data[combVal]);
+                return results;    // No selection from set necessary/permissible
+            case CombinationalType.NPR:
+                int totalCount = _data.Count;
+                List<int> divisors = new List<int>(_count);
+                int k = _count - 1;
 
-            for (int i = totalCount - 1; k >= 0; i--)
-            {
-                divisors.Add(Combinatorics.nPr(i, k));
-                k--;
-            }
-
-            int number = combVal;
-            
-            for (int i = 0; i < divisors.Count; i++)
-            {
-                pos.Add(number / divisors[i]);
-                number %= divisors[i];
-            }
-        }
-
-        if (_combinationalType == CombinationalType.NCR)
-        {
-            int a = _data.Count;
-            int b = _count;
-            int x = (Combinatorics.nCr(_data.Count, _count) - 1) - combVal;
-
-            for (int i = 0; i < _count; i++)
-            {
-                a--;
-                while (Combinatorics.nCr(a, b) > x)
+                for (int i = totalCount - 1; k >= 0; i--)
                 {
-                    a--;
+                    divisors.Add(Combinatorics.nPr(i, k));
+                    k--;
                 }
 
-                pos.Add(_data.Count - 1 - a);
-                x -= Combinatorics.nCr(a, b);
-                b--;
-            }
+                int number = combVal;
+            
+                foreach (var t in divisors)
+                {
+                    pos.Add(number / t);
+                    number %= t;
+                }
+                break;
+            case CombinationalType.NCR:
+                int a = _data.Count;
+                int b = _count;
+                int x = (Combinatorics.nCr(_data.Count, _count) - 1) - combVal;
+
+                for (int i = 0; i < _count; i++)
+                {
+                    a--;
+                    while (Combinatorics.nCr(a, b) > x)
+                    {
+                        a--;
+                    }
+
+                    pos.Add(_data.Count - 1 - a);
+                    x -= Combinatorics.nCr(a, b);
+                    b--;
+                }
+                break;
+            default: throw new Exception("Supposedly unreachable code executed.");
         }
         
         foreach (var p in pos)
@@ -99,27 +85,42 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
                 dcopy.RemoveAt(p);
         }
 
-        if (aIndex is null && bIndex is null)
+        return results;
+    }
+
+    public override DataType Read(int combVal, int? aIndex, int? bIndex)
+    {
+        if (_combinationalType == CombinationalType.Singular)
         {
-            return new StringListDataType(results.Select(r => r[0]).ToList());
+            if (bIndex is not null)
+                throw new Exception("Invalid array access");
+            
+            if (aIndex is null)
+                return new StringDataType(_data[combVal][0]);
+            
+            if(aIndex.Value < 0 || aIndex.Value >= _data.First().Count)
+                throw new Exception("Invalid array access: Out of range");
+                
+            return new StringDataType(gencomb(combVal)[0][aIndex.Value]);    
         }
+
+        // Access in case of two-dimensional result table
         
-        if (aIndex is null && bIndex is not null)   // Arrow operator
-        {
+        List<List<string>> results = gencomb(combVal);
+
+        if (aIndex is null && bIndex is null)
+            return new StringListDataType(results.Select(r => r[0]).ToList());
+        
+        if (aIndex is null && bIndex is not null)   // Arrow operator (unimplemented in expression visitor)
             return new StringListDataType(results.Select(r => r[bIndex.Value]).ToList());
-        }
 
         if (aIndex is not null && bIndex is null)
-        {
             return new StringDataType(results[aIndex.Value][0]);
-        }
 
         if (aIndex is not null && bIndex is not null)
-        {
             return new StringDataType(results[aIndex.Value][bIndex.Value]);
-        }
         
-        throw new NotImplementedException("nCr/nPr read access unimplemented");
+        throw new NotImplementedException("Unimplemented access mode");
     }
 
     public override int Count()
