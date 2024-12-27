@@ -1,3 +1,4 @@
+using System.Xml;
 using combgen.Datatype;
 using combgen.Util;
 
@@ -36,5 +37,28 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
     public override int Count()
     {
         return Combinatorics.ipow((_to - _from) / _interval + 1, (short)_count);
+    }
+
+    public override string GetTable(int baseIndex, bool verbose = false)
+    {
+        string output = "<table>";
+        
+        if (verbose)
+        {
+            if (_count == 1)
+            {
+                output += "<tr><th>Value</th><th>Code</th></tr>";
+        
+                for (int i = 0; i < Count(); i++)
+                {
+                    output += "<tr><td>" + (from + interval * i) + "</td>";
+                    output += "<td>" + (baseIndex * i) + "</td></tr>";
+                }
+            }
+        }
+        
+        output += "</table>";
+
+        return output;
     }
 }

@@ -16,7 +16,7 @@ public class Options
     public bool Enumerate {get; set; }
         
     [Option('T', "table", Required = false, HelpText = "Print the table as HTML.", SetName = "table")]
-    public string? TableFile {get; set;}
+    public bool Table {get; set;}
         
     [Value(0, MetaName = "input file",
         HelpText = "Input source file to be processed.",

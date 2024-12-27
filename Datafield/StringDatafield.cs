@@ -136,4 +136,21 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
             default: throw new InvalidOperationException();
         }
     }
+
+    public override string GetTable(int baseIndex, bool verbose = false)
+    {
+        string output = "<table>";
+        output += "<tr><th>Value</th><th>Code</th></tr>";
+        
+        for (int i = 0; i < Count(); i++)
+        {
+            List<List<string>> curList = gencomb(i);
+            output += "<tr><td>" + string.Join(", ", curList.Select(x => x[0]).ToList()) + "</td>";
+            output += "<td>" + (baseIndex * i) + "</td></tr>";
+        }
+        
+        output += "</table>";
+
+        return output;
+    }
 }

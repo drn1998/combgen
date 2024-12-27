@@ -34,4 +34,23 @@ public class MixedRadixConverter
         }
         return product;
     }
+
+    public List<int> Bases()
+    {
+        List<int> _base = new List<int>();
+        List<int> locBases = new List<int>(bases);
+
+        locBases.Reverse();
+        
+        int product = 1;
+        foreach (var radix in locBases)
+        {
+            _base.Add(product);
+            product *= radix;
+        }
+        
+        _base.Reverse();
+
+        return _base;
+    }
 }

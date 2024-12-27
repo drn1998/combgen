@@ -57,7 +57,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
         MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(radix);
 
-        if (_options.Count)
+        if (_options is { Count: true, Enumerate: false })
         {
             Console.WriteLine(mixedRadixConverter.Total());
         } else if (_options.Enumerate)
@@ -80,8 +80,18 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
                 {
                     tmp += expressionVisitor.Visit(expression).ToString();
                 }
+                
+                if(_options.Count) Console.Write(i.ToString().PadLeft(mixedRadixConverter.Total().ToString().Length) + ": ");
             
                 Console.WriteLine(tmp);
+            }
+        } else if (_options.Table)
+        {
+            List<int> bases = mixedRadixConverter.Bases();
+            
+            for (int i = 0; i < _datafields.Count; i++)
+            {
+                Console.WriteLine(_datafields.ElementAt(i).Value.GetTable(bases[i], true));
             }
         }
         
