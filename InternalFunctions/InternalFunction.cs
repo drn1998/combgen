@@ -307,4 +307,14 @@ public partial class InternalFunctions
         
         throw new Exception("Unknown data type");
     }
+    [FunctionName("C")]
+    public static DataType C(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+        if (args[0] is not IntDataType) throw new Exception("Invalid data type: Must be an integer");
+        
+        int input = (int)args[0].GetObject();
+
+        return new StringDataType(new string(char.ConvertFromUtf32(input)));
+    }
 }
