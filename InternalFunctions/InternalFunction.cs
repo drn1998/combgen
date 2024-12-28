@@ -2,8 +2,19 @@ using combgen.Datatype;
 
 namespace combgen.InternalFunctions;
 
+[AttributeUsage(AttributeTargets.Method)]
+public class FunctionName : Attribute
+{
+    public string Name { get; }
+
+    public FunctionName(string name)
+    {
+        Name = name;
+    }
+}
 public partial class InternalFunctions
 {
+    [FunctionName("capitalize")]
     public static DataType Capitalize(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -26,7 +37,7 @@ public partial class InternalFunctions
 
         return new StringDataType(new string(chars));
     }
-
+    [FunctionName("celToFah")]
     public static DataType CelToFah(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -37,7 +48,7 @@ public partial class InternalFunctions
         
         return new IntDataType(celsius * 9/5 + 32);
     }
-
+    [FunctionName("if")]
     public static DataType If(List<DataType> args)
     {
         bool expressionTrue = false;
@@ -59,7 +70,7 @@ public partial class InternalFunctions
         
         throw new Exception("Invalid number of arguments (should be unreachable!)");
     }
-
+    [FunctionName("max")]
     public static DataType Max(List<DataType> args)
     {
         if (args.Count == 0) throw new Exception("Invalid number of arguments: Must be 1 to n");
@@ -68,7 +79,7 @@ public partial class InternalFunctions
         
         return new IntDataType(args.Max(arg => (int)arg.GetObject()));
     }
-    
+    [FunctionName("min")]
     public static DataType Min(List<DataType> args)
     {
         if (args.Count == 0) throw new Exception("Invalid number of arguments: Must be 1 to n");
@@ -77,7 +88,7 @@ public partial class InternalFunctions
         
         return new IntDataType(args.Min(arg => (int)arg.GetObject()));
     }
-
+    [FunctionName("countElem")]
     public static DataType CountElements(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -86,7 +97,7 @@ public partial class InternalFunctions
         
         return new IntDataType(sl.Count);
     }
-
+    [FunctionName("strLen")]
     public static DataType StrLen(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -95,7 +106,7 @@ public partial class InternalFunctions
         
         return new IntDataType(str.Length);
     }
-
+    [FunctionName("sphVol")]
     public static DataType SphVol(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -107,7 +118,7 @@ public partial class InternalFunctions
         
         throw new Exception("Invalid SphVol argument (must be positive)");
     }
-    
+    [FunctionName("sqrt")]
     public static DataType sqrt(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -119,7 +130,7 @@ public partial class InternalFunctions
         
         throw new Exception("Invalid sqrt argument (must be positive)");
     }
-
+    [FunctionName("leftPad")]
     public static DataType LeftPad(List<DataType> args)
     {
         if (args.Count != 2) throw new Exception("Invalid number of arguments: Must be 2 (string, int)");
@@ -133,7 +144,7 @@ public partial class InternalFunctions
 
         return new StringDataType(str.PadLeft(i));
     }
-    
+    [FunctionName("rightPad")]
     public static DataType RightPad(List<DataType> args)
     {
         if (args.Count != 2) throw new Exception("Invalid number of arguments: Must be 2 (string, int)");
@@ -147,6 +158,7 @@ public partial class InternalFunctions
         
         return new StringDataType(str.PadRight(i));
     }
+    [FunctionName("groupcat")]
     public static DataType groupcat(List<DataType> args)
     {
         if (args.Count < 2 || args.Count > 3)
@@ -187,7 +199,7 @@ public partial class InternalFunctions
 
         throw new Exception("Unexpected logic error: This point should not be reached.");
     }
-    
+    [FunctionName("exclude")]
     public static DataType exclude(List<DataType> args)
     {
         if (args.Count != 2)
@@ -210,7 +222,7 @@ public partial class InternalFunctions
 
         return new StringListDataType(resultList);
     }
-
+    [FunctionName("irand")]
     public static DataType irand(List<DataType> args)
     {
         Random random = new Random();
@@ -220,5 +232,60 @@ public partial class InternalFunctions
         if (args.Count == 2) return new IntDataType(random.Next((int)args[0].GetObject(), (int)args[1].GetObject()));
         
         throw new Exception("irand must be called with 0, 1 or 2 arguments.");
+    }
+    [FunctionName("STR")]
+    public static DataType str(List<DataType> args)
+    {
+        if (args.Count != 1 || args.Count != 2) throw new Exception("Invalid number of arguments: Must be 1 or 2");
+        if (args[0] is FloatDataType && args[1] is IntDataType)
+        {
+            float f = (float)args[0].GetObject();
+            int dp = (int)args[1].GetObject();
+            return new StringDataType(f.ToString("F" + dp.ToString()));
+        }
+
+        return new StringDataType(args[0].ToString());
+    }
+    [FunctionName("INT")]
+    public static DataType INT(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+
+        switch (args[0].GetObject())
+        {
+            case int i:
+                return new IntDataType(i);
+            case string s:
+                return new IntDataType(Convert.ToInt32(s));
+            case float f:
+                return new IntDataType(Convert.ToInt32(f));
+            case bool b:
+                return new IntDataType(b ? 1 : 0);
+            case List<string> l:
+                throw new Exception("Cannot convert string list to int");
+        }
+        
+        throw new Exception("Unknown data type");
+    }
+    [FunctionName("FLOAT")]
+    public static DataType FLOAT(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+
+        switch (args[0].GetObject())
+        {
+            case int i:
+                return new FloatDataType(Convert.ToSingle(i));
+            case string s:
+                return new FloatDataType(Convert.ToSingle(s));
+            case float f:
+                return new FloatDataType(f);
+            case bool b:
+                return new FloatDataType(b ? 1.0f : 0.0f);  // This seems odd... Maybe it should throw an exception
+            case List<string> l:
+                throw new Exception("Cannot convert string list to int");
+        }
+        
+        throw new Exception("Unknown data type");
     }
 }

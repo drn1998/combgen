@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Reflection;
 using combgen.Datatype;
+using combgen.InternalFunctions;
 
 namespace combgen.Visitors;
 
@@ -209,28 +210,19 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         var arguments = context.functionCall().expression()
             .Select(expr => expr.Accept(this)) // Evaluate each expression
             .ToList();
+        
+        Type type = typeof(InternalFunctions.InternalFunctions);
 
-        // Find the method in InternalFunctions class
-        var method = typeof(InternalFunctions.InternalFunctions).GetMethod(functionName,
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+        // Use LINQ to find the method with the desired attribute
+        var targetMethod = type.GetMethods().FirstOrDefault(method => method.GetCustomAttribute<FunctionName>()?.Name == functionName);
 
-        if (method == null)
-            throw new Exception($"Function '{functionName}' not found.");
-
-        // Ensure the method accepts the correct number and types of parameters
-        var parameters = method.GetParameters();
-        if (parameters.Length != 1 || parameters[0].ParameterType != typeof(List<DataType>))
-            throw new Exception($"Function '{functionName}' has an invalid signature.");
-
-        // Call the method and return the result
-        try
+        if (targetMethod != null)
         {
-            return (DataType)method.Invoke(null, new object[] { arguments });
+            var instance = Activator.CreateInstance(type);
+            return (DataType)targetMethod.Invoke(instance, [arguments]);
         }
-        catch (TargetInvocationException ex)
-        {
-            throw new Exception($"Error invoking function '{functionName}': {ex.InnerException?.Message}", ex.InnerException);
-        }
+
+        throw new Exception($"Unable to call function {functionName}: Not found");
     }
 
 }

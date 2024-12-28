@@ -10,5 +10,5 @@ $person = {
      
 <
   $person[0] . " does the same almost every morning. " .
-  Capitalize($person[1]) . " always wakes up early to go outside. Later, " . $person[1] . " enjoys a cup of tea."
+  capitalize($person[1]) . " always wakes up early to go outside. Later, " . $person[1] . " enjoys a cup of tea."
 >
