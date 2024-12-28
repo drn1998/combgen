@@ -37,13 +37,32 @@ public partial class InternalFunctions
 
         return new StringDataType(new string(chars));
     }
+    [FunctionName("toUpper")]
+    public static DataType toUpper(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+        if (args[0] is not StringDataType) throw new Exception("Invalid data type: Must be a string");
+        
+        string input = (string)args[0].GetObject();
+        
+        return new StringDataType(input.ToUpper());
+    }
+    [FunctionName("toLower")]
+    public static DataType toLower(List<DataType> args)
+    {
+        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
+        if (args[0] is not StringDataType) throw new Exception("Invalid data type: Must be a string");
+        
+        string input = (string)args[0].GetObject();
+        
+        return new StringDataType(input.ToLower());
+    }
     [FunctionName("celToFah")]
     public static DataType CelToFah(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
         if (args[0] is not IntDataType) throw new Exception("Invalid data type: Must be an integer");
         
-        // Convert celsius to fahrenheit
         int celsius = (int)args[0].GetObject();
         
         return new IntDataType(celsius * 9/5 + 32);
