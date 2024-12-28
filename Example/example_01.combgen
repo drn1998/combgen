@@ -2,6 +2,6 @@
    last line of the script generates a sentence for each possible combination of colors and objects. */
 
 $color = { "red", "green", "yellow", "blue", "purple", "white", "orange" };
-$object = { "ballon", "ball", "dice", "car", "box" };
+$object = { "balloon", "ball", "dice", "car", "box" };
 
 < "I saw a " . $color . " " . $object . "." >
