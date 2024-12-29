@@ -18,7 +18,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         if (aIndex is null)
         {
             if (_count == 1)
-                return new IntDataType(from + interval * combVal);
+                return new IntDataType(_from + _interval * combVal);
             else
                 throw new Exception("aIndex is necessary for multi-value integer data field.");
         }
@@ -51,7 +51,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         
                 for (int i = 0; i < Count(); i++)
                 {
-                    output += "<tr><td>" + (from + interval * i) + "</td>";
+                    output += "<tr><td>" + (_from + _interval * i) + "</td>";
                     output += "<td>" + (baseIndex * i) + "</td></tr>";
                 }
             }
