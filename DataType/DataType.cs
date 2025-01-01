@@ -93,11 +93,6 @@ public class StringListDataType : DataType
     {
         this.lValue = new List<string>(lValue);
     }
-
-    public void AddValue(string lValue)
-    {
-        this.lValue.Add(lValue);
-    }
     
     public override string ToString() => "list(" + lValue.Count + ") {" + string.Join(", ", lValue) + "}";
 
