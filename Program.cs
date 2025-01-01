@@ -1,45 +1,53 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using Antlr4.Runtime;
 using combgen.Parameters;
 using combgen.Visitors;
-using CommandLine;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace combgen;
 
 public class Options
 {
-    [Option('c', "count", Required = false, HelpText = "Print the number of combinations.", SetName = "output")]
     public bool Count {get; set; }
-    
-    [Option('e', "enumerate", Required = false, HelpText = "Enumerate the combinations", SetName = "output")]
     public bool Enumerate {get; set; }
-        
-    [Option('T', "table", Required = false, HelpText = "Print the table as HTML.", SetName = "table")]
     public bool Table {get; set;}
-        
-    [Value(0, MetaName = "input file",
-        HelpText = "Input source file to be processed.",
-        Required = true)]
     public string? FileName { get; set;}
 }
-class Program
+
+public class Program
 {
-    static void Main(string[] args)
+    [Argument(0)]
+    [Required]
+    public string Filename { get; }
+    [Option]
+    public bool Enumerate { get; set; }
+    [Option]
+    public bool Table { get; set; }
+    [Option]
+    public bool Count { get; set; }
+
+    public void OnExecute()
     {
-        Options opt = CommandLine.Parser.Default.ParseArguments<Options>(args).Value;
+        Options opt = new Options
+        {
+            FileName = Filename,
+            Enumerate = Enumerate,
+            Table = Table,
+            Count = Count
+        };
         
-        if(opt is null) Environment.Exit(1);
-        
-        AntlrInputStream inputStream = new AntlrFileStream(opt.FileName, Encoding.UTF8);
-        combgenLexer lexer = new combgenLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        combgenParser parser = new combgenParser(commonTokenStream);
-        combgenParser.ScriptContext scriptContext = parser.script();
-        
-        ScriptVisitor scriptVisitor = new ScriptVisitor(opt);  // Give script visitor options in constructor
         try
         {
+            AntlrInputStream inputStream = new AntlrFileStream(opt.FileName, Encoding.UTF8);
+            combgenLexer lexer = new combgenLexer(inputStream);
+            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+            combgenParser parser = new combgenParser(commonTokenStream);
+            combgenParser.ScriptContext scriptContext = parser.script();
+        
+            ScriptVisitor scriptVisitor = new ScriptVisitor(opt);
             scriptVisitor.Visit(scriptContext);
         }
         catch (Exception e)
@@ -47,6 +55,7 @@ class Program
             TextWriter tw = Console.Error;
             tw.WriteLine(e.Message);
         }
-        
     }
+    public static int Main(string[] args)
+        => CommandLineApplication.Execute<Program>(args);
 }
