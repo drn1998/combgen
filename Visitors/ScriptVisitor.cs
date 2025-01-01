@@ -164,8 +164,15 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
                 .OrderBy(innerList => innerList.FirstOrDefault())
                 .ToList();
         else
-            if (sdo.Origin == StringDatafield.StringFieldOrigin.OptionalString)
-                throw new Exception("Canonical string order cannot be applied to optional string");
+        {
+            switch (sdo.Origin)
+            {
+                case StringDatafield.StringFieldOrigin.OptionalString:
+                    throw new Exception("Canonical string order cannot be applied to optional string");
+                case StringDatafield.StringFieldOrigin.AnonymousList:
+                    throw new Exception("Canonical string order cannot be applied to anonymous string list");
+            }
+        }
 
         if (ct is StringDatafield.CombinationalType.NPR or StringDatafield.CombinationalType.NCR && sdo.Origin == StringDatafield.StringFieldOrigin.OptionalString)
             throw new Exception("nPr or nCr mode cannot be applied to optional string");
