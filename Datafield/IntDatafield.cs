@@ -55,6 +55,11 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
                     output += "<td>" + (baseIndex * i) + "</td></tr>";
                 }
             }
+            else
+            {
+                throw new NotImplementedException(
+                    "Cannot generate table representation of multi-value integer datafield");
+            }
         }
         
         output += "</table>";
