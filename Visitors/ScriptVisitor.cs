@@ -51,6 +51,9 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             ParamField pf = Visit(paramAssign) as ParamField;
             _parameter.SetParameter(pf.ParamName, pf.ParamValue);
         }
+        
+        if (context.datafieldAssignment().Length == 0)
+            throw new Exception("No datafield assignments in source. At least one datafield is required.");
 
         foreach (var datafieldAssign in context.datafieldAssignment())
         {
@@ -85,6 +88,9 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
                 ExpressionVisitor expressionVisitor = new ExpressionVisitor(_datafields, null, values);
 
                 string tmp = string.Empty;
+
+                if (context.combinationalExpression() is null)
+                    throw new Exception("No combinational expression found or empty.");
             
                 foreach (var expression in context.combinationalExpression().expression())
                 {
