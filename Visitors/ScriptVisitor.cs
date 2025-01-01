@@ -239,6 +239,13 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             data.Add(optstr);
             data.Add(empty);
         }
+
+        if (context.anonymousStringDatafield() is not null)
+        {
+            sdo.Origin = StringDatafield.StringFieldOrigin.AnonymousList;
+            
+            data = AnonymousStringDataField.Generate(Convert.ToInt32(context.anonymousStringDatafield().NUMBER().GetText()));
+        }
         
         if(!ListsEqualLength(data)) throw new Exception("Not all rows have the same number of columns");
         

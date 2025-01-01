@@ -24,7 +24,8 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         LiteralList,
         File,
         SqlQuery,          // Not yet in use
-        OptionalString
+        OptionalString,
+        AnonymousList
     }
 
     private List<List<string>> gencomb(int combVal)

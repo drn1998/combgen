@@ -15,6 +15,7 @@ datafieldExpression:   (ORDERED)? stringDatafield ((NCR | NPR) NUMBER)?     # st
 stringDatafield:       literalStringDatafield
                      | fileStringDatafield
                      | optionalStringDatafield
+                     | anonymousStringDatafield
                      ;
                      
 literalStringDatafield: '{' (DQ_STRING | stringArray) (',' (DQ_STRING | stringArray))* '}';
@@ -24,6 +25,8 @@ stringArray:        '[' DQ_STRING (';' DQ_STRING)+ ']';
 fileStringDatafield:    SQ_STRING;
 
 optionalStringDatafield: '~' DQ_STRING;
+
+anonymousStringDatafield: '[' NUMBER ']';
                      
 intDatafield:         MKINT '(' integer '-' integer (',' NUMBER)? ')';
 
