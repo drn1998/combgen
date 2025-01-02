@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using combgen.Datafield;
 using combgen.Datatype;
 using combgen.Parameters;
@@ -32,7 +33,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
 
     static string unescapeString(string str)
     {
-        return str.Substring(1, str.Length - 2);
+        return Regex.Unescape(str.Substring(1, str.Length - 2));
     }
     
     static bool ListsEqualLength(List<List<string>> listOfLists)
@@ -85,7 +86,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
                     values[_datafields.ElementAt(j).Key] = result[j];
                 }
 
-                ExpressionVisitor expressionVisitor = new ExpressionVisitor(_datafields, null, values);
+                ExpressionVisitor expressionVisitor = new ExpressionVisitor(_datafields, values);
 
                 string tmp = string.Empty;
 
@@ -144,8 +145,8 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
     public override object? VisitStringDatafieldExpression(combgenParser.StringDatafieldExpressionContext context)
     {
         StringDatafield.CombinationalType ct = StringDatafield.CombinationalType.Singular;
-        int count = 1;
-        StringDatafield.StringFieldOrigin sfo = StringDatafield.StringFieldOrigin.LiteralList;
+        
+        int count = 1;  // Default
         
         if (context.NUMBER() is not null)
         {
@@ -265,18 +266,14 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
     {
         int from = Convert.ToInt32(context.intDatafield().integer()[0].GetText());
         int to = Convert.ToInt32(context.intDatafield().integer()[1].GetText());
-        int interval;
-        int count;
+        int interval = 1;
+        int count = 1;
 
         if (context.intDatafield().NUMBER() is not null)
             interval = Convert.ToInt32(context.intDatafield().NUMBER().GetText());
-        else
-            interval = 1;
 
         if (context.NUMBER() is not null)
             count = Convert.ToInt32(context.NUMBER().GetText());
-        else
-            count = 1;
         
         IntDatafield intDatafield = new IntDatafield(from, to, interval, count);
 

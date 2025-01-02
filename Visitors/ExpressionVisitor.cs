@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using combgen.Datatype;
 using combgen.InternalFunctions;
 
@@ -8,13 +9,11 @@ namespace combgen.Visitors;
 public class ExpressionVisitor : combgenBaseVisitor<DataType>
 {
     private Dictionary<string, Datafield.Datafield> _datafields; // For variable access
-    private readonly IDictionary<string, Func<List<DataType>, DataType>> _functions; // For function calls
     private Dictionary<string, int> _combVal;
 
-    public ExpressionVisitor(Dictionary<string, Datafield.Datafield> datafields, IDictionary<string, Func<List<DataType>, DataType>> functions, Dictionary<string, int> combVal)
+    public ExpressionVisitor(Dictionary<string, Datafield.Datafield> datafields, Dictionary<string, int> combVal)
     {
         _datafields = datafields;
-        _functions = functions;
         _combVal = combVal;
     }
 
@@ -38,7 +37,7 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
 
     public override DataType VisitStringExpression(combgenParser.StringExpressionContext context)
     {
-        string value = context.dqString().GetText().Trim('"');
+        string value = Regex.Unescape(context.dqString().GetText().Substring(1, context.dqString().GetText().Length - 2));
         return new StringDataType(value);
     }
 
@@ -48,20 +47,13 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         var right = context.expression(1).Accept(this);
 
         if (left is IntDataType leftInt && right is IntDataType rightInt)
-        {
-            // TODO this whole "contains" needs to be replaced with something more concise, reliable and systematic
-            return new IntDataType(context.GetText().Contains("+") ? (int)leftInt.GetObject() + (int)rightInt.GetObject() : (int)leftInt.GetObject() - (int)rightInt.GetObject());
-        }
+            return new IntDataType(context.addOp().GetText() == "+" ? (int)leftInt.GetObject() + (int)rightInt.GetObject() : (int)leftInt.GetObject() - (int)rightInt.GetObject());
         
         if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
-        {
-            return new FloatDataType(context.GetText().Contains("+") ? (float)leftFloat.GetObject() + (float)rightFloat.GetObject() : (float)leftFloat.GetObject() - (float)rightFloat.GetObject());
-        }
+            return new FloatDataType(context.addOp().GetText() == "+" ? (float)leftFloat.GetObject() + (float)rightFloat.GetObject() : (float)leftFloat.GetObject() - (float)rightFloat.GetObject());
 
         if (left is StringDataType leftString && right is StringDataType rightString)
-        {
-            if(context.GetText().Contains("+")) return new StringDataType((string)leftString.GetObject() + (string)rightString.GetObject());
-        }
+            if(context.addOp().GetText() == "+") return new StringDataType((string)leftString.GetObject() + (string)rightString.GetObject());
 
         throw new InvalidOperationException("AddExpression requires scalar or string operands.");
     }
@@ -72,14 +64,10 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         var right = context.expression(1).Accept(this);
 
         if (left is IntDataType leftInt && right is IntDataType rightInt)
-        {
-            return new IntDataType(context.GetText().Contains("*") ? (int)leftInt.GetObject() * (int)rightInt.GetObject() : (int)leftInt.GetObject() / (int)rightInt.GetObject());
-        }
+            return new IntDataType(context.mulOp().GetText() == "*" ? (int)leftInt.GetObject() * (int)rightInt.GetObject() : (int)leftInt.GetObject() / (int)rightInt.GetObject());
         
         if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
-        {
-            return new FloatDataType(context.GetText().Contains("*") ? (float)leftFloat.GetObject() * (float)rightFloat.GetObject() : (float)leftFloat.GetObject() / (float)rightFloat.GetObject());
-        }
+            return new FloatDataType(context.mulOp().GetText() == "*" ? (float)leftFloat.GetObject() * (float)rightFloat.GetObject() : (float)leftFloat.GetObject() / (float)rightFloat.GetObject());
 
         throw new InvalidOperationException("MulExpression requires scalar operands.");
     }
@@ -91,7 +79,6 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
 
         if (left is IntDataType leftInt && right is IntDataType rightInt)
         {
-            //return new BooleanDataType(context.GetText().Contains("<") ? (int)leftInt.GetObject() < (int)rightInt.GetObject() : (int)leftInt.GetObject() > (int)rightInt.GetObject());
             switch (context.compOp().GetText())
             {
                 case "<":
@@ -170,9 +157,7 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
         var value = context.expression().Accept(this);
 
         if (value is BooleanDataType booleanValue)
-        {
             return new BooleanDataType(!(bool)booleanValue.GetObject());
-        }
 
         throw new InvalidOperationException("NegatedExpression requires a boolean operand.");
     }
@@ -186,17 +171,22 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
     {
         int? aIndex, bIndex;
 
-        if(context.variableAccess().expression().Length > 0)
-            aIndex = Convert.ToInt16(context.variableAccess().expression()[0].Accept(this).GetObject());
-        else
+        if (context.variableAccess().ARROW() is not null)
+        {
             aIndex = null;
+            bIndex = Convert.ToInt16(context.variableAccess().expression()[0].Accept(this).GetObject());
+        } else
+        {
+            if(context.variableAccess().expression().Length > 0)
+                aIndex = Convert.ToInt16(context.variableAccess().expression()[0].Accept(this).GetObject());
+            else
+                aIndex = null;
         
-        if(context.variableAccess().expression().Length > 1)
-            bIndex = Convert.ToInt16(context.variableAccess().expression()[1].Accept(this).GetObject());
-        else
-            bIndex = null;
-        
-        // TODO implement arrow operator (returns list of every [aIndex] string together)
+            if(context.variableAccess().expression().Length > 1)
+                bIndex = Convert.ToInt16(context.variableAccess().expression()[1].Accept(this).GetObject());
+            else
+                bIndex = null;
+        }
 
         return _datafields[context.variableAccess().VARIABLE().GetText()].Read(_combVal[context.variableAccess().VARIABLE().GetText()], aIndex, bIndex);
     }

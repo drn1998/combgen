@@ -43,8 +43,8 @@ combinationalExpression:    '<'
 
 // Check reasonable precedece of those expressions; implement modulus % and exponentiation ^
 
-expression:                   expression ('*' | '/') expression                 #MulExpression
-                            | expression ('+' | '-') expression                 #AddExpression
+expression:                   expression mulOp expression                       #MulExpression
+                            | expression addOp expression                       #AddExpression
                             | expression compOp expression                      #CompareExpression
                             | expression eqOp expression                        #EqualityExpression
                             | expression logOp expression                       #LogicalExpression
@@ -62,6 +62,8 @@ boolean:                    'true' | 'false';
 
 functionCall:       IDENTIFIER '(' (expression (',' expression)*)? ')';
 dqString:           DQ_STRING;
+addOp:     '+' | '-';
+mulOp:     '*' | '/';
 compOp:    '>=' | '<=' | '<' | '>';
 eqOp:      '!=' | '==';
 logOp:     'and' | 'or';
@@ -82,16 +84,22 @@ MKDATE:     'mkdate';
 COUNT:      'count';
 REM:        'rem';
 
-DQ_STRING:  '"' ~["\n\r\f]* '"';
-SQ_STRING:  '\'' ~['\n\r\f]* '\'';
+DQ_STRING: '"' (DQ_ESC|.)*? '"' ;
+SQ_STRING: '\'' (SQ_ESC|.)*? '\'' ;
+
+fragment
+DQ_ESC : '\\"' | '\\\\' ;
+
+fragment
+SQ_ESC : '\\\'' | '\\\\' ;
 
 VARIABLE:       '$' IDENTIFIER;
 IDENTIFIER:     [A-Za-z][A-Za-z_]*;
 NUMBER:         '0' | [1-9][0-9]*;
 
-fragment DECIMAL_PART: [0-9]+;
-
 DECIMAL:      NUMBER '.' DECIMAL_PART;
+
+fragment DECIMAL_PART: [0-9]+;
 
 LINE_COMMENT: '//' ~[\n]* -> skip;
 BLOCK_COMMENT : '/*' ( BLOCK_COMMENT | . )*? '*/'  -> skip ;
