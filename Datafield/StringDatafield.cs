@@ -112,7 +112,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         if (aIndex is null && bIndex is null)
             return new StringListDataType(results.Select(r => r[0]).ToList());
         
-        if (aIndex is null && bIndex is not null)   // Arrow operator (unimplemented in expression visitor)
+        if (aIndex is null && bIndex is not null)
             return new StringListDataType(results.Select(r => r[bIndex.Value]).ToList());
 
         if (aIndex is not null && bIndex is null)
@@ -138,7 +138,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         }
     }
 
-    public override string GetTable(int baseIndex, bool verbose = false, string title = "Value")
+    public override string GetTable(int baseIndex, TableVerbosity tv, string title = "Value")
     {
         /* TODO: In non-verbose mode, nCr and nPr shall provide values to calculate the value instead of presenting
            every combination with its pre-calculated code (as this saves space with the tradeoff of having to do

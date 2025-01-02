@@ -39,11 +39,11 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         return Combinatorics.ipow((_to - _from) / _interval + 1, (short)_count);
     }
 
-    public override string GetTable(int baseIndex, bool verbose = false, string title = "Value")
+    public override string GetTable(int baseIndex, TableVerbosity tv, string title = "Value")
     {
         string output = "<table>";
         
-        if (verbose)
+        if (tv == TableVerbosity.Default)
         {
             if (_count == 1)
             {
