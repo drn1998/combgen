@@ -106,10 +106,14 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         {
             List<int> bases = mixedRadixConverter.Bases();
             
+            Console.WriteLine("<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t\n  </head>\n\t<body>");
+            
             for (int i = 0; i < _datafields.Count; i++)
             {
                 Console.WriteLine(_datafields.ElementAt(i).Value.GetTable(bases[i], Datafield.Datafield.TableVerbosity.Default, _datafields.ElementAt(i).Key.Substring(1)));
             }
+            
+            Console.WriteLine("</body>\n</html>");
         }
         
         return base.VisitScript(context);
