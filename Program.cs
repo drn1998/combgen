@@ -38,7 +38,16 @@ public class Program
             Table = Table,
             Count = Count
         };
+        #if DEBUG
+            AntlrInputStream inputStream = new AntlrFileStream(opt.FileName, Encoding.UTF8);
+            combgenLexer lexer = new combgenLexer(inputStream);
+            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+            combgenParser parser = new combgenParser(commonTokenStream);
+            combgenParser.ScriptContext scriptContext = parser.script();
         
+            ScriptVisitor scriptVisitor = new ScriptVisitor(opt);
+            scriptVisitor.Visit(scriptContext);
+        #else
         try
         {
             AntlrInputStream inputStream = new AntlrFileStream(opt.FileName, Encoding.UTF8);
@@ -55,6 +64,7 @@ public class Program
             TextWriter tw = Console.Error;
             tw.WriteLine(e.Message);
         }
+        #endif
     }
     public static int Main(string[] args)
         => CommandLineApplication.Execute<Program>(args);
