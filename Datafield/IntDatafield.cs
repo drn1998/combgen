@@ -19,8 +19,8 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         {
             if (_count == 1)
                 return new IntDataType(_from + _interval * combVal);
-            else
-                throw new Exception("aIndex is necessary for multi-value integer data field.");
+            
+            throw new Exception("aIndex is necessary for multi-value integer data field.");
         }
         else
         {
@@ -57,8 +57,26 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
             }
             else
             {
-                throw new NotImplementedException(
-                    "Cannot generate table representation of multi-value integer datafield");
+                output += $"<tr><th>{title}</th><th>Code</th></tr>";
+        
+                for (int i = 0; i < Count(); i++)
+                {
+                    MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(Enumerable.Repeat((_to - _from) / _interval + 1, _count).ToList());
+
+                    List<int> res = mixedRadixConverter.ConvertToMixedRadix(i);
+                    
+                    output += "<tr><td>";
+
+                    for (int j = 0; j < _count; j++)
+                    {
+                        output += _from + _interval * res[j];
+                        if (j != _count - 1) output += ", ";
+                    }
+
+                    output += "</td>";
+                    
+                    output += "<td>" + (baseIndex * i) + "</td></tr>";
+                }
             }
         }
         
