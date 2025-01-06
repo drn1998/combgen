@@ -153,7 +153,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         {
             List<List<string>> curList = gencomb(1);
 
-            output = $"<table><tr><th colspan=\"2\" style=\"text-align:center\">~&nbsp;{title}</th></tr><tr><td>{curList[0][0]}</td><td>{baseIndex}</td></tr></table>";
+            output = $"<table><tr><th colspan=\"2\" style=\"text-align:center\">~&nbsp;{title}</th></tr><tr><td>{curList[0][0]}</td><td style=\"text-align: right;\">" + baseIndex.ToString("N0", customFormat) + "</td></tr></table>";
 
         }
         else
@@ -165,7 +165,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
             for (int i = 0; i < Count(); i++) {
                     List<List<string>> curList = gencomb(i);
                     output += "<tr><td>" + string.Join(", ", curList.Select(x => x[0]).ToList()) + "</td>";
-                    output += "<td>" + (baseIndex * i) + "</td></tr>";
+                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", customFormat) + "</td></tr>";
             }
             
             output += "</table>";

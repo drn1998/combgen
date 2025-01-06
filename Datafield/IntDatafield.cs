@@ -53,7 +53,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
                 for (int i = 0; i < Count(); i++)
                 {
                     output += "<tr><td>" + (_from + _interval * i) + "</td>";
-                    output += "<td>" + (baseIndex * i) + "</td></tr>";
+                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", customFormat) + "</td></tr>";
                 }
             }
             else
@@ -76,7 +76,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
 
                     output += "</td>";
                     
-                    output += "<td>" + (baseIndex * i) + "</td></tr>";
+                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", customFormat) + "</td></tr>";
                 }
             }
         }

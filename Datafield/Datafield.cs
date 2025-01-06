@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Numerics;
 using combgen.Datatype;
 
@@ -10,6 +11,12 @@ public abstract class Datafield
         Compact,
         Default,
         Verbose
+    };
+    
+    public NumberFormatInfo customFormat = new NumberFormatInfo
+    {
+        NumberGroupSeparator = "\u202F", // Thin space
+        NumberGroupSizes = new[] { 3 },  // Grouping every 3 digits
     };
     public abstract DataType Read(BigInteger combVal, int? aIndex, int? bIndex);
     public abstract int Count();

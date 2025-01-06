@@ -107,7 +107,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         {
             List<BigInteger> bases = mixedRadixConverter.Bases();
             
-            Console.WriteLine("<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t\n  </head>\n\t<body>");
+            Console.WriteLine("<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t\n      <style>\n        td, th {\n            font-family: sans-serif;\n        font-size: 9px;\n        }\n    </style></head>\n\t<body>");
             
             for (int i = 0; i < _datafields.Count; i++)
             {
