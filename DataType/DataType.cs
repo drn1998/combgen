@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace combgen.Datatype;
 
 public abstract class DataType
@@ -7,16 +9,16 @@ public abstract class DataType
 
 public class BooleanDataType : DataType
 {
-    private bool bValue;
+    private readonly bool _bValue;
 
     public BooleanDataType(bool bValue)
     {
-        this.bValue = bValue;
+        this._bValue = bValue;
     }
 
     public override string ToString()
     {
-        switch (bValue)
+        switch (_bValue)
         {
             case false: return "false";
             case true: return "true";
@@ -25,79 +27,79 @@ public class BooleanDataType : DataType
 
     public override object GetObject()
     {
-        return bValue;
+        return _bValue;
     }
 }
 
 public class StringDataType : DataType
 {
-    private string sValue;
+    private readonly string _sValue;
 
     public StringDataType(string sValue)
     {
-        this.sValue = sValue;
+        this._sValue = sValue;
     }
     
-    public override string ToString() => sValue;
+    public override string ToString() => _sValue;
 
     public override object GetObject()
     {
-        return sValue;
+        return _sValue;
     }
 }
 
 public class IntDataType : DataType
 {
-    private int iValue;
+    private readonly int _iValue;
 
     public IntDataType(int iValue)
     {
-        this.iValue = iValue;
+        this._iValue = iValue;
     }
     
-    public override string ToString() => iValue.ToString();
+    public override string ToString() => _iValue.ToString();
 
     public override object GetObject()
     {
-        return iValue;
+        return _iValue;
     }
 }
 
 public class FloatDataType : DataType
 {
-    private float fValue;
+    private readonly float _fValue;
 
     public FloatDataType(float fValue)
     {
-        this.fValue = fValue;
+        this._fValue = fValue;
     }
     
-    public override string ToString() => fValue.ToString();
+    public override string ToString() => _fValue.ToString(CultureInfo.InvariantCulture);
 
     public override object GetObject()
     {
-        return fValue;
+        return _fValue;
     }
 }
 
 public class StringListDataType : DataType
 {
-    private List<string> lValue;
+    private readonly List<string> _lValue;
 
     public StringListDataType()
     {
-        lValue = new List<string>();
+        _lValue = new List<string>();
     }
     
     public StringListDataType(List<string> lValue)
     {
-        this.lValue = new List<string>(lValue);
+        this._lValue = new List<string>(lValue);
     }
     
-    public override string ToString() => "list(" + lValue.Count + ") {" + string.Join(", ", lValue) + "}";
+    public override string ToString() => "list(" + _lValue.Count + ") {" + string.Join(", ", _lValue) + "}";
 
     public override object GetObject()
     {
-        return lValue;
+        return _lValue;
     }
 }

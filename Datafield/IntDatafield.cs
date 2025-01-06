@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Xml;
 using combgen.Datatype;
 using combgen.Util;
 
@@ -40,7 +39,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         return Combinatorics.ipow((_to - _from) / _interval + 1, (short)_count);
     }
 
-    public override string GetTable(BigInteger baseIndex, TableVerbosity tv, string title = "Value")
+    public override string GetTable(BigInteger baseIndex, TableVerbosity tv = TableVerbosity.Default, string title = "Value")
     {
         string output = "<table>";
         
@@ -53,7 +52,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
                 for (int i = 0; i < Count(); i++)
                 {
                     output += "<tr><td>" + (_from + _interval * i) + "</td>";
-                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", customFormat) + "</td></tr>";
+                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", CustomFormat) + "</td></tr>";
                 }
             }
             else
@@ -76,7 +75,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
 
                     output += "</td>";
                     
-                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", customFormat) + "</td></tr>";
+                    output += "<td style=\"text-align: right;\">" + (baseIndex * i).ToString("N0", CustomFormat) + "</td></tr>";
                 }
             }
         }

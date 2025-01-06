@@ -1,9 +1,6 @@
-using System.Linq.Expressions;
 using System.Numerics;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using combgen.Datafield;
-using combgen.Datatype;
 using combgen.Parameters;
 using combgen.Util;
 
@@ -29,10 +26,10 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
     public record DatafieldAssignment
     {
         public required string FieldName;
-        public required Datafield.Datafield dField;
+        public required Datafield.Datafield DField;
     }
 
-    static string unescapeString(string str)
+    private static string UnescapeString(string str)
     {
         return Regex.Unescape(str.Substring(1, str.Length - 2));
     }
@@ -60,7 +57,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         foreach (var datafieldAssign in context.datafieldAssignment())
         {
             DatafieldAssignment df = Visit(datafieldAssign) as DatafieldAssignment;
-            _datafields[df.FieldName] = df.dField;
+            _datafields[df.FieldName] = df.DField;
         }
         
         List<BigInteger> radix = new List<BigInteger>();
@@ -140,7 +137,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         DatafieldAssignment df = new DatafieldAssignment()
         {
             FieldName = variableName,
-            dField = datafieldExpressionResult
+            DField = datafieldExpressionResult
         };
         
         return df;
@@ -209,7 +206,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             foreach (var str in context.literalStringDatafield().DQ_STRING())
             {
                 List<string> mb = new List<string>();
-                mb.Add(unescapeString(str.GetText()));
+                mb.Add(UnescapeString(str.GetText()));
                 data.Add(mb);
             }
 
@@ -218,7 +215,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
                 List<string>mb = new List<string>();
                 foreach (var str in strA.DQ_STRING())
                 {
-                    mb.Add(unescapeString(str.GetText()));
+                    mb.Add(UnescapeString(str.GetText()));
                 }
                 data.Add(mb);
             }
@@ -228,7 +225,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         {
             sdo.Origin = StringDatafield.StringFieldOrigin.File;
             
-            string filename = unescapeString(context.fileStringDatafield().SQ_STRING().GetText());
+            string filename = UnescapeString(context.fileStringDatafield().SQ_STRING().GetText());
             
             using (StreamReader reader = new StreamReader(filename))
             {
@@ -247,7 +244,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             sdo.Origin = StringDatafield.StringFieldOrigin.OptionalString;
             
             List<string> empty = new List<string>() {""};
-            List<string> optstr = new List<string>() {unescapeString(context.optionalStringDatafield().DQ_STRING().GetText())};
+            List<string> optstr = new List<string>() {UnescapeString(context.optionalStringDatafield().DQ_STRING().GetText())};
             
             data.Add(optstr);
             data.Add(empty);
