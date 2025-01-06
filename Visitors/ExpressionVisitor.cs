@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using combgen.Datatype;
@@ -9,9 +10,9 @@ namespace combgen.Visitors;
 public class ExpressionVisitor : combgenBaseVisitor<DataType>
 {
     private Dictionary<string, Datafield.Datafield> _datafields; // For variable access
-    private Dictionary<string, int> _combVal;
+    private Dictionary<string, BigInteger> _combVal;
 
-    public ExpressionVisitor(Dictionary<string, Datafield.Datafield> datafields, Dictionary<string, int> combVal)
+    public ExpressionVisitor(Dictionary<string, Datafield.Datafield> datafields, Dictionary<string, BigInteger> combVal)
     {
         _datafields = datafields;
         _combVal = combVal;

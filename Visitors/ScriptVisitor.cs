@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using combgen.Datafield;
@@ -62,7 +63,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             _datafields[df.FieldName] = df.dField;
         }
         
-        List<int> radix = new List<int>();
+        List<BigInteger> radix = new List<BigInteger>();
 
         foreach (var memb in _datafields)
         {
@@ -76,10 +77,10 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             Console.WriteLine(mixedRadixConverter.Total());
         } else if (_options.Enumerate)
         {
-            for (int i = 0; i < mixedRadixConverter.Total(); i++)
+            for (BigInteger i = 0; i < mixedRadixConverter.Total(); i++)
             {
-                List<int> result = mixedRadixConverter.ConvertToMixedRadix(i);
-                Dictionary<string, int> values = new Dictionary<string, int>();
+                List<BigInteger> result = mixedRadixConverter.ConvertToMixedRadix(i);
+                Dictionary<string, BigInteger> values = new Dictionary<string, BigInteger>();
 
                 for (int j = 0; j < _datafields.Count; j++)
                 {
@@ -104,7 +105,7 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
             }
         } else if (_options.Table)
         {
-            List<int> bases = mixedRadixConverter.Bases();
+            List<BigInteger> bases = mixedRadixConverter.Bases();
             
             Console.WriteLine("<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t\n  </head>\n\t<body>");
             

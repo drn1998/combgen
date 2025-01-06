@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Xml;
 using combgen.Datatype;
 using combgen.Util;
@@ -11,14 +12,14 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
     private int _interval = interval;
     private int _count = count;
 
-    public override DataType Read(int combVal, int? aIndex, int? bIndex)
+    public override DataType Read(BigInteger combVal, int? aIndex, int? bIndex)
     {
         if (bIndex is not null) throw new ArgumentException("bIndex not applicable to integer datafield");
 
         if (aIndex is null)
         {
             if (_count == 1)
-                return new IntDataType(_from + _interval * combVal);
+                return new IntDataType(_from + _interval * (int)combVal);
             
             throw new Exception("aIndex is necessary for multi-value integer data field.");
         }
@@ -26,11 +27,11 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         {
             if (aIndex.Value >= _count) throw new Exception("aIndex is out of range of integer datafield.");
 
-            MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(Enumerable.Repeat((_to - _from) / _interval + 1, _count).ToList());
+            MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(Enumerable.Repeat((BigInteger)(_to - _from) / _interval + 1, _count).ToList());
 
-            List<int> res = mixedRadixConverter.ConvertToMixedRadix(combVal);
+            List<BigInteger> res = mixedRadixConverter.ConvertToMixedRadix(combVal);
             
-            return new IntDataType(_from + _interval * res[aIndex.Value]);
+            return new IntDataType((int)(_from + _interval * res[aIndex.Value]));
         }
     }
 
@@ -39,7 +40,7 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         return Combinatorics.ipow((_to - _from) / _interval + 1, (short)_count);
     }
 
-    public override string GetTable(int baseIndex, TableVerbosity tv, string title = "Value")
+    public override string GetTable(BigInteger baseIndex, TableVerbosity tv, string title = "Value")
     {
         string output = "<table>";
         
@@ -61,9 +62,9 @@ public class IntDatafield(int from, int to, int interval, int count) : Datafield
         
                 for (int i = 0; i < Count(); i++)
                 {
-                    MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(Enumerable.Repeat((_to - _from) / _interval + 1, _count).ToList());
+                    MixedRadixConverter mixedRadixConverter = new MixedRadixConverter(Enumerable.Repeat((BigInteger)(_to - _from) / _interval + 1, _count).ToList());
 
-                    List<int> res = mixedRadixConverter.ConvertToMixedRadix(i);
+                    List<BigInteger> res = mixedRadixConverter.ConvertToMixedRadix(i);
                     
                     output += "<tr><td>";
 

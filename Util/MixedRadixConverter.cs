@@ -1,19 +1,21 @@
+using System.Numerics;
+
 namespace combgen.Util;
 
 public class MixedRadixConverter
 {
-    private List<int> bases;
+    private List<BigInteger> bases;
 
     // Constructor that accepts the mixed radix bases as a list
-    public MixedRadixConverter(List<int> bases)
+    public MixedRadixConverter(List<BigInteger> bases)
     {
         this.bases = bases;
     }
 
     // Converts a number to the mixed-radix system defined by the bases
-    public List<int> ConvertToMixedRadix(int number)
+    public List<BigInteger> ConvertToMixedRadix(BigInteger number)
     {
-        List<int> mixedRadix = new List<int>(new int[bases.Count]);
+        List<BigInteger> mixedRadix = new List<BigInteger>(new BigInteger[bases.Count]);
 
         // Process each base starting from the rightmost position (least significant)
         for (int i = bases.Count - 1; i >= 0; i--)
@@ -25,9 +27,9 @@ public class MixedRadixConverter
         return mixedRadix;
     }
     
-    public int Total()
+    public BigInteger Total()
     {
-        int product = 1;
+        BigInteger product = 1;
         foreach (var radix in bases)
         {
             product *= radix;
@@ -35,14 +37,14 @@ public class MixedRadixConverter
         return product;
     }
 
-    public List<int> Bases()
+    public List<BigInteger> Bases()
     {
-        List<int> _base = new List<int>();
-        List<int> locBases = new List<int>(bases);
+        List<BigInteger> _base = new List<BigInteger>();
+        List<BigInteger> locBases = new List<BigInteger>(bases);
 
         locBases.Reverse();
         
-        int product = 1;
+        BigInteger product = 1;
         foreach (var radix in locBases)
         {
             _base.Add(product);

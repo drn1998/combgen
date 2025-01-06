@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Numerics;
 using combgen.Datatype;
 using combgen.Util;
 
@@ -89,25 +90,26 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         return results;
     }
 
-    public override DataType Read(int combVal, int? aIndex, int? bIndex)
+    public override DataType Read(BigInteger combVal, int? aIndex, int? bIndex)
     {
+        int _combVal = (int)combVal;
         if (_combinationalType == CombinationalType.Singular)
         {
             if (bIndex is not null)
                 throw new Exception("Invalid array access");
             
             if (aIndex is null)
-                return new StringDataType(_data[combVal][0]);
+                return new StringDataType(_data[_combVal][0]);
             
             if(aIndex.Value < 0 || aIndex.Value >= _data.First().Count)
                 throw new Exception("Invalid array access: Out of range");
                 
-            return new StringDataType(gencomb(combVal)[0][aIndex.Value]);    
+            return new StringDataType(gencomb(_combVal)[0][aIndex.Value]);    
         }
 
         // Access in case of two-dimensional result table
         
-        List<List<string>> results = gencomb(combVal);
+        List<List<string>> results = gencomb(_combVal);
 
         if (aIndex is null && bIndex is null)
             return new StringListDataType(results.Select(r => r[0]).ToList());
@@ -138,7 +140,7 @@ public class StringDatafield(StringDatafield.CombinationalType combinationalType
         }
     }
 
-    public override string GetTable(int baseIndex, TableVerbosity tv, string title = "Value")
+    public override string GetTable(BigInteger baseIndex, TableVerbosity tv, string title = "Value")
     {
         /* TODO: In non-verbose mode, nCr and nPr shall provide values to calculate the value instead of presenting
            every combination with its pre-calculated code (as this saves space with the tradeoff of having to do
