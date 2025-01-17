@@ -2,6 +2,7 @@ using combgen.Datatype;
 
 namespace combgen_test;
 
+[TestClass]
 public partial class InternalFunctionTest
 {
     [TestClass]
@@ -20,7 +21,7 @@ public partial class InternalFunctionTest
         [DataRow(new object[] { 49, 0 }, 49)]
         [DataRow(new object[] { -49, 0 }, 0)]
         [DataRow(new object[] { 3 }, 3)]
-        public void MinFunc_ValidInputs_ReturnsExpectedMinimum(object[] inputValues, int expectedMaximum)
+        public void MaxFunc_ValidInputs_ReturnsExpectedMaximum(object[] inputValues, int expectedMaximum)
         {
             List<DataType> dataTypes = new List<DataType>();
             foreach (var value in inputValues)
