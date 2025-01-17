@@ -1,0 +1,18 @@
+/* Functions can be used to transform the returned value of a variable. In this example, the pronoun is needed twice,
+   but only one of the times does it have to be written with a capital letter. To avoid having the word two times
+   (with upper and lower case), the Capitalize function is used. This example also introduces the ~ operator for
+   optional strings. It is a shorter (and better readable) notation for a string list containing the empty string and
+   the string literal that is preceded by the tilde.*/
+   
+$person = {
+                ["Alice"; "she"], 
+                ["Bob"; "he"], 
+                ["Carol"; "she"]
+        };
+
+$almost = ~"almost "; // $almost = {"", "almost "};
+
+<
+  $person[0] . " does the same " . $almost . "every morning. " .
+  capitalize($person[1]) . " always wakes up early to go outside. Later, " . $person[1] . " enjoys a cup of tea."
+>

@@ -1,0 +1,17 @@
+/* This example uses the nPr operator to select k (in this case, 3) from n (in this case, 6) entries of a string
+   table. It causes the assigned variable to contain a table of k entries from the string table (with a specific order)
+   which can be accessed by the array subscript operators as seen below. */
+
+$names = {
+            ["Alice"; "she"],
+            ["Bob"; "he"],
+            ["Carol"; "she"],
+            ["Dave"; "he"],
+            ["Eve"; "she"],
+            ["Francis"; "he"]   // Not always male
+} nPr 3;
+
+<
+    "At the contest, " . $names[0] . " was 1st, " . $names[1] . " was 2nd, and " . $names[2] . " was 3rd. " .
+    $names[0] . " said that " . $names[0][1] . " did not expect to win and is really happy about the success."
+>

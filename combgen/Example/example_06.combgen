@@ -1,0 +1,9 @@
+/* This example illustrates two further possibilities when working with integer datafields: That the range (but not
+   their interval) can be negative, and that functions exist for integers as well (in this case, to also display the
+   value in Fahrenheit) */
+   
+$low_temp = mkint(-12 - 2, 2);    // 12 to (including) 20, at an interval of 2: 12, 14, 16, 18, 20
+$rng_temp = mkint(1 - 3);         // Temperature range (default interval of 1): 1, 2, 3
+
+< "The temperature was between " . $low_temp . " and " . $low_temp + $rng_temp . " °C, which is about " .
+  celToFah($low_temp) . " to " . celToFah($low_temp + $rng_temp) . " °F." >

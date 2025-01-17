@@ -1,0 +1,24 @@
+/* This more advanced example combines ordered and unordered aspects of lists: Four of seven (earth is excluded)
+   planets are chosen using the nCr operator which means they are not in a particular order but whichever order the
+   data field assignment prescribes. However, one of those planets is considered more favorable than the remaining
+   three. Choosing this one is done using the built-in constructor mkint which defines an integer data field. This
+   integer in the range of 0 to 3 selects which of the four planets is given precedence over the equal remaining ones.
+   By this construct, the notion of one planet being considered more relevant than the other three, but, crucially,
+   making no distinctions between those three planets (they basically share the 2nd rank) internally.
+   
+   The function groupcat concatenates all the strings of a list with a separator. It has an optional third argument
+   which uses another separator between the penultimate and last string, a common phenomenon when enumerating items
+   in natural language. The exclude function returns a string list with the element at a certain index removed. This
+   avoids the repetition of the most favorable planet when enumerating the other three planets which are expressed to
+   be liked.
+   
+   It should also be of note that the ° operator is introduced in this example. It is placed between the equal sign and
+   a string data field in its assignment and tells combgen that this string list shall not be sorted internally. This
+   prevents the strings of the planets names to be ordered alphabetically (Jupiter, Mars, Mercury, Neptune, Saturn,
+   Uranus, Venus), which would be distracting instead of helpful, as they have a canonical order that is preferred over
+   their lexicographical one. */
+   
+$planets = ° {"Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"} nCr 4;
+$hrank = mkint(0 - 3);
+
+< "My favorite planets after " . $planets[$hrank] . " are " . groupcat(exclude($planets, $hrank), ", ", " and ") . "." >

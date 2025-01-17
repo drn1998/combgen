@@ -1,0 +1,53 @@
+/* TODO:
+ * - Which pages from Savvedro are picked up and mentioned (or the order inside an age?)
+ * - Is there anything from Edanna that could be encoded (the most linear age)?
+ */
+
+# General
+
+>>> The order in which the ages are visited. If the ages are left before completion (where the symbol is obtained and
+    written) to temporarily visit another one, the order in which the first visit took place is relevant. <<<
+
+$ageVisitOrder = {"Amateria", "Edanna", "Voltaic"} nPr 3;
+
+>>> From which side (the stairs from the Voltaic tusk or the ladder at the Edanna tusks rock) the central tusk is
+    entered first. <<< 
+
+$centerTuskEntrance = {"Voltaic tusk", "Edanna tusk"};
+
+>>> If each symbol is inserted into the scanner in the central tusk immediately, or if they are collected and scanned
+    together. <<<
+
+$collectSymbols = mkint(0 - 1);
+
+# Amateria
+
+>>> The order the puzzles are solved <<<
+
+$puzzleOrder = {"Balance", "Rotation", "Portals"} nPr 3; // analysis of real playthroughs implies unevenly distribution!
+
+>>> The order in which the patterns of the corresponding puzzles are entered into the devices to access the central
+    building. <<<
+
+$entryOrder = {"Balance", "Rotation", "Portals"} nPr 3;
+
+# Edanna
+
+# Voltaic
+
+## Valves
+
+>>> The first three valves are trivial (all open). At the second, two of four are opened, and at the third, three of
+    four are unopened. The valves A, B, C, D are labeled from left to right. <<<
+    
+$secondLevel = [4] nCr 2;   // Could be nPr if the order in which they are clicked is significant
+$thirdLevel = [4] nCr 3; 
+
+# Narayan
+
+>>> The order in which the three patterns of the ages and corresponding sentences are entered (clockwise) <<<
+
+$patternOrder = {"Amateria", "Edanna", "Voltaic"} nPr 3;
+
+//$trustSavvedro = mkint(0 - 1);  // Whether Savvedro is initially trusted (which makes him throw the book away)
+$abandonSavvedro = mkint(0 - 1);// Whether the player decides to abandon Savvedro in Narayan

@@ -1,0 +1,25 @@
+#The city
+
+>>> There are two jugs which the player can take to the woman: The correct one is at the market (where the merchant who
+    trades the weight and later the water, stays). Another one, which does not actually belong to the woman, is next to
+    the fountain with the three faces. This datafield decides if the player immediately brings the correct jug (or, in
+    case of a written walkthrough, mentions the possibility of bringing the wrong jug) <<<
+    
+$firstJugAttempt = {"Correct/Market", "Wrong/Fountain"};
+
+>>> The three valves which need to be opened to cause a gas explosion at the small hole on the back of the temple can 
+    (in the logic of the game) be opened in an arbitrary order. The valves are at the fountain with the faces, at the
+    gate near the market (and temple back entrance) and a third one is on the walls of the temple near a way leading to
+    another gate in an otherwise unused area. <<<
+    
+$valveOrder = {"Fountain (temple walls)", "Market (city walls)", "Other (temple walls)"} nPr 3;
+
+// There's got to be something IN the temple
+
+#The desert
+
+>>> There are four buildings in the desert which have switches for astronomical (and other, unused) symbols. The
+    following datafield concerns the order regarding the building where the setting is correct being set correctly
+    first. <<<
+    
+$desertBuildingSwitches = {"☾", "☼☾", "☾☼", "☼"} nPr 4;

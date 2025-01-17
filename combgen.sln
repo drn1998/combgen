@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "combgen", "combgen\combgen.csproj", "{F4D70E3F-D44C-4AC6-8662-2CD79FA7A315}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "combgen_test", "combgen_test\combgen_test.csproj", "{46B687A4-69E2-473E-8132-E8CE59F631EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4D70E3F-D44C-4AC6-8662-2CD79FA7A315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D70E3F-D44C-4AC6-8662-2CD79FA7A315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D70E3F-D44C-4AC6-8662-2CD79FA7A315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D70E3F-D44C-4AC6-8662-2CD79FA7A315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B687A4-69E2-473E-8132-E8CE59F631EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B687A4-69E2-473E-8132-E8CE59F631EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B687A4-69E2-473E-8132-E8CE59F631EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B687A4-69E2-473E-8132-E8CE59F631EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

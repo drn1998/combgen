@@ -1,0 +1,7 @@
+/* The arrow operator returns a list of strings from an arbitrary column (instead of always the first). This would not
+   be possible using one, two or no angle brackets as the order in which the table is ordinarily accessed (row first,
+   column second) has to be reversed. */
+   
+$name = {["Alice"; "London"], ["Bob"; "Berlin"], ["Carol"; "Paris"], ["Dave"; "Tokyo"]} nCr 2;
+
+< groupcat($name, " and ") . " (they are in " . groupcat($name->[1], " and ") . " respectively) …" >

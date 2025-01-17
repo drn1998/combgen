@@ -1,0 +1,9 @@
+/* Anonymous string lists can be used if you do not intend to enter the actual strings into the computer, e.g. to keep
+   them of the system for the purpose of transparent data security. A number in angle braces substitutes the literal
+   strings with the letters from A = 0 to n */
+   
+$first_entity = [4];
+$second_entity = [9] nCr 2;
+
+< "First entity: " . $first_entity . "; two from nine items of the second entity: " . $second_entity[0] . " and " .
+  $second_entity[1] . "." >

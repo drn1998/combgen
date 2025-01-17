@@ -1,0 +1,12 @@
+/* Array subscripts can be integer expressions as well. This makes it possible to write a script like the following,
+   which otherwise would also return implausible sentences like "The new material is conductive and dielectric." */
+
+$property = {
+                ["conductive"; "dielectric"],
+                ["transparent"; "opaque"],
+                ["low-density"; "high-density"]
+            } nCr 2;
+
+$side = 2 * mkint(0-1);
+
+< "The new material is " . $property[0][$side[0]] . " and " . $property[1][$side[1]] . "." >
