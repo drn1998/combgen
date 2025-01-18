@@ -47,7 +47,10 @@ public class Program
             AntlrInputStream inputStream = new AntlrFileStream(opt.FileName, Encoding.UTF8);
             combgenLexer lexer = new combgenLexer(inputStream);
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-            combgenParser parser = new combgenParser(commonTokenStream);
+            combgenParser parser = new combgenParser(commonTokenStream)
+            {
+                ErrorHandler = new BailErrorStrategy()
+            };
             combgenParser.ScriptContext scriptContext = parser.script();
         
             ScriptVisitor scriptVisitor = new ScriptVisitor(opt);
@@ -58,7 +61,10 @@ public class Program
             AntlrInputStream inputStream = new AntlrFileStream(opt.FileName, Encoding.UTF8);
             combgenLexer lexer = new combgenLexer(inputStream);
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-            combgenParser parser = new combgenParser(commonTokenStream);
+            combgenParser parser = new combgenParser(commonTokenStream)
+            {
+                ErrorHandler = new BailErrorStrategy()
+            };
             combgenParser.ScriptContext scriptContext = parser.script();
         
             ScriptVisitor scriptVisitor = new ScriptVisitor(opt);
