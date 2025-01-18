@@ -44,31 +44,60 @@ public class ExpressionVisitor : combgenBaseVisitor<DataType>
 
     public override DataType VisitAddExpression(combgenParser.AddExpressionContext context)
     {
-        var left = context.expression(0).Accept(this);
-        var right = context.expression(1).Accept(this);
+        try
+        {
+            checked
+            {
+                var left = context.expression(0).Accept(this);
+                var right = context.expression(1).Accept(this);
 
-        if (left is IntDataType leftInt && right is IntDataType rightInt)
-            return new IntDataType(context.addOp().GetText() == "+" ? (int)leftInt.GetObject() + (int)rightInt.GetObject() : (int)leftInt.GetObject() - (int)rightInt.GetObject());
-        
-        if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
-            return new FloatDataType(context.addOp().GetText() == "+" ? (float)leftFloat.GetObject() + (float)rightFloat.GetObject() : (float)leftFloat.GetObject() - (float)rightFloat.GetObject());
+                if (left is IntDataType leftInt && right is IntDataType rightInt)
+                    return new IntDataType(context.addOp().GetText() == "+"
+                        ? (int)leftInt.GetObject() + (int)rightInt.GetObject()
+                        : (int)leftInt.GetObject() - (int)rightInt.GetObject());
 
-        if (left is StringDataType leftString && right is StringDataType rightString)
-            if(context.addOp().GetText() == "+") return new StringDataType((string)leftString.GetObject() + (string)rightString.GetObject());
+                if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
+                    return new FloatDataType(context.addOp().GetText() == "+"
+                        ? (float)leftFloat.GetObject() + (float)rightFloat.GetObject()
+                        : (float)leftFloat.GetObject() - (float)rightFloat.GetObject());
+
+                if (left is StringDataType leftString && right is StringDataType rightString)
+                    if (context.addOp().GetText() == "+")
+                        return new StringDataType((string)leftString.GetObject() + (string)rightString.GetObject());
+            }
+        }
+        catch (Exception e)
+        {
+            throw new OverflowException();
+        }
 
         throw new InvalidOperationException("AddExpression requires scalar or string operands.");
     }
 
     public override DataType VisitMulExpression(combgenParser.MulExpressionContext context)
     {
-        var left = context.expression(0).Accept(this);
-        var right = context.expression(1).Accept(this);
+        try
+        {
+            checked
+            {
+                var left = context.expression(0).Accept(this);
+                var right = context.expression(1).Accept(this);
 
-        if (left is IntDataType leftInt && right is IntDataType rightInt)
-            return new IntDataType(context.mulOp().GetText() == "*" ? (int)leftInt.GetObject() * (int)rightInt.GetObject() : (int)leftInt.GetObject() / (int)rightInt.GetObject());
-        
-        if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
-            return new FloatDataType(context.mulOp().GetText() == "*" ? (float)leftFloat.GetObject() * (float)rightFloat.GetObject() : (float)leftFloat.GetObject() / (float)rightFloat.GetObject());
+                if (left is IntDataType leftInt && right is IntDataType rightInt)
+                    return new IntDataType(context.mulOp().GetText() == "*"
+                        ? (int)leftInt.GetObject() * (int)rightInt.GetObject()
+                        : (int)leftInt.GetObject() / (int)rightInt.GetObject());
+
+                if (left is FloatDataType leftFloat && right is FloatDataType rightFloat)
+                    return new FloatDataType(context.mulOp().GetText() == "*"
+                        ? (float)leftFloat.GetObject() * (float)rightFloat.GetObject()
+                        : (float)leftFloat.GetObject() / (float)rightFloat.GetObject());
+            }
+        }
+        catch (Exception e)
+        {
+            throw new OverflowException();
+        }
 
         throw new InvalidOperationException("MulExpression requires scalar operands.");
     }

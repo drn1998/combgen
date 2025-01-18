@@ -149,10 +149,12 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         if (_options.Random is not null && _options.Enumerate == true)
             throw new Exception("Cannot use options random and enumerate together.");
 
-        if (_options.Count && (_options.Random == null && _options.Enumerate == false))
+        if (_options is { Count: true, Random: null, Enumerate: false })
         {
             Console.WriteLine(mixedRadixConverter.Total());
-        } else if (_options.Enumerate)
+            return mixedRadixConverter.Total();
+        }
+        if (_options.Enumerate)
         {
             for (BigInteger i = 0; i < mixedRadixConverter.Total(); i++)
                 PrintCombination(mixedRadixConverter, context, i, mixedRadixConverter.Total());
