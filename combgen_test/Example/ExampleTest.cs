@@ -20,6 +20,7 @@ public partial class ExampleTest
     [DataRow("../../../../combgen/Example/example_09.combgen", "140")]
     [DataRow("../../../../combgen/Example/example_10.combgen", "144")]
     [DataRow("../../../../combgen/Example/example_11.combgen", "6")]
+    [DataRow("../../../../combgen/Example/example_12.combgen", "792")]
     public void TestExample(string file, string countLiteral)
     {
         Options opt = new Options
