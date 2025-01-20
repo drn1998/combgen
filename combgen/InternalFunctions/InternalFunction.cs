@@ -57,16 +57,98 @@ public partial class InternalFunctions
         
         return new StringDataType(input.ToLower());
     }
-    [FunctionName("celToFah")]
-    public static DataType CelToFah(List<DataType> args)
+    
+    [FunctionName("cel_to_fahr")]
+    public static DataType CelsiusToFahrenheit(List<DataType> args)
     {
-        if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
-        if (args[0] is not IntDataType) throw new Exception("Invalid data type: Must be an integer");
-        
-        int celsius = (int)args[0].GetObject();
-        
-        return new IntDataType(celsius * 9/5 + 32);
+        if (args.Count != 1) 
+            throw new ArgumentException("Invalid number of arguments: Must be 1");
+
+        var celsius = args[0].GetObject();
+
+        return celsius switch
+        {
+            int intValue => new IntDataType(intValue * 9 / 5 + 32),
+            float floatValue => new FloatDataType(floatValue * 9.0f / 5.0f + 32.0f),
+            _ => throw new ArgumentException("Invalid data type: Must be an integer or floating-point")
+        };
     }
+    [FunctionName("fahr_to_cel")]
+    public static DataType FahrenheitToCelsius(List<DataType> args)
+    {
+        if (args.Count != 1) 
+            throw new ArgumentException("Invalid number of arguments: Must be 1");
+
+        var celsius = args[0].GetObject();
+
+        return celsius switch
+        {
+            int intValue => new IntDataType((intValue - 32) * 5 / 9),
+            float floatValue => new FloatDataType((floatValue - 32.0f) * 5.0f/9.0f),
+            _ => throw new ArgumentException("Invalid data type: Must be an integer or floating-point")
+        };
+    }
+    [FunctionName("cel_to_kelvin")]
+    public static DataType CelsiusToKelvin(List<DataType> args)
+    {
+        if (args.Count != 1) 
+            throw new ArgumentException("Invalid number of arguments: Must be 1");
+
+        var celsius = args[0].GetObject();
+
+        return celsius switch
+        {
+            int intValue => new IntDataType(intValue + 273),
+            float floatValue => new FloatDataType(floatValue + 273.15f),
+            _ => throw new ArgumentException("Invalid data type: Must be an integer or floating-point")
+        };
+    }
+    [FunctionName("fahr_to_kelvin")]
+    public static DataType FahrenheitToKelvin(List<DataType> args)
+    {
+        if (args.Count != 1) 
+            throw new ArgumentException("Invalid number of arguments: Must be 1");
+
+        var celsius = args[0].GetObject();
+
+        return celsius switch
+        {
+            int intValue => new IntDataType((intValue - 32) * 5 / 9 + 273),
+            float floatValue => new FloatDataType((floatValue - 32.0f) * 5.0f / 9.0f + 273.15f),
+            _ => throw new ArgumentException("Invalid data type: Must be an integer or floating-point")
+        };
+    }
+    [FunctionName("kelvin_to_cel")]
+    public static DataType KelvinToCelsius(List<DataType> args)
+    {
+        if (args.Count != 1) 
+            throw new ArgumentException("Invalid number of arguments: Must be 1");
+
+        var celsius = args[0].GetObject();
+
+        return celsius switch
+        {
+            int intValue => new IntDataType(intValue - 273),
+            float floatValue => new FloatDataType(floatValue - 273.15f),
+            _ => throw new ArgumentException("Invalid data type: Must be an integer or floating-point")
+        };
+    }
+    [FunctionName("kelvin_to_fahr")]
+    public static DataType KelvinToFahrenheit(List<DataType> args)
+    {
+        if (args.Count != 1) 
+            throw new ArgumentException("Invalid number of arguments: Must be 1");
+
+        var celsius = args[0].GetObject();
+
+        return celsius switch
+        {
+            int intValue => new IntDataType((intValue - 273) * 9 / 5 + 32),
+            float floatValue => new FloatDataType((floatValue - 273.15f) * 9.0f / 5.0f + 32.0f),
+            _ => throw new ArgumentException("Invalid data type: Must be an integer or floating-point")
+        };
+    }
+    
     [FunctionName("if")]
     public static DataType If(List<DataType> args)
     {
