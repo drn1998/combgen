@@ -9,7 +9,8 @@ parameterAssignment:  IDENTIFIER '=' NUMBER;
 datafieldAssignment:  SECTION* ANNOTATION? VARIABLE '=' datafieldExpression ';';
 
 datafieldExpression:   ORDERED? stringDatafield ((NCR | NPR) NUMBER)?     # stringDatafieldExpression
-                     | (NUMBER ('*' | '×'))? intDatafield        # intDatafieldExpression
+                     | (NUMBER ('*' | '×'))? intDatafield                 # intDatafieldExpression
+                     | floatDatafield                                     # floatDatafieldExpression
                      ;
 
 /*datafieldAssignment:  VARIABLE '=' (NUMBER ('*' | '×'))? datafieldExpression ';';
@@ -35,6 +36,7 @@ optionalStringDatafield: '~' DQ_STRING;
 anonymousStringDatafield: '[' NUMBER ']';
                      
 intDatafield:         MKINT '(' integer '-' integer (',' NUMBER)? ')';
+floatDatafield:       MKFLOAT '(' float '-' float (',' DECIMAL)? ')';
 
 integer: ('+' | '-')? NUMBER;
 float:   ('+' | '-')? DECIMAL;

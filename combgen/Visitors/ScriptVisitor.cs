@@ -1,7 +1,9 @@
+using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Web;
 using combgen.Datafield;
+using combgen.Datatype;
 using combgen.Parameters;
 using combgen.Util;
 
@@ -364,5 +366,19 @@ public class ScriptVisitor : combgenBaseVisitor<object?>
         IntDatafield intDatafield = new IntDatafield(from, to, interval, count);
 
         return intDatafield;
+    }
+
+    public override object? VisitFloatDatafieldExpression(combgenParser.FloatDatafieldExpressionContext context)
+    {
+        float from = Convert.ToSingle(context.floatDatafield().@float()[0].GetText(), CultureInfo.InvariantCulture);
+        float to = Convert.ToSingle(context.floatDatafield().@float()[1].GetText(), CultureInfo.InvariantCulture);
+        float interval = 1.0f;
+        
+        if (context.floatDatafield().DECIMAL() is not null)
+            interval = Convert.ToSingle(context.floatDatafield().DECIMAL().GetText(), CultureInfo.InvariantCulture);
+        
+        FloatDatafield floatDataType = new FloatDatafield(from, to, interval);
+        
+        return floatDataType;
     }
 }
