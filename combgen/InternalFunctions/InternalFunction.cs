@@ -1,3 +1,4 @@
+using System.Globalization;
 using combgen.Datatype;
 
 namespace combgen.InternalFunctions;
@@ -207,7 +208,7 @@ public partial class InternalFunctions
         
         return new IntDataType(str.Length);
     }
-    [FunctionName("sphVol")]
+    [FunctionName("sphere_vol")]
     public static DataType SphVol(List<DataType> args)
     {
         if (args.Count != 1) throw new Exception("Invalid number of arguments: Must be 1");
@@ -217,7 +218,7 @@ public partial class InternalFunctions
         if (float.IsPositive(vol))
             return new FloatDataType(4.0f/3.0f * float.Pi * float.Pow(vol, 3));
         
-        throw new Exception("Invalid SphVol argument (must be positive)");
+        throw new Exception("Invalid SphVol argument (must be positive float)");
     }
     [FunctionName("sqrt")]
     public static DataType sqrt(List<DataType> args)
@@ -378,7 +379,7 @@ public partial class InternalFunctions
             case int i:
                 return new FloatDataType(Convert.ToSingle(i));
             case string s:
-                return new FloatDataType(Convert.ToSingle(s));
+                return new FloatDataType(Convert.ToSingle(s, CultureInfo.InvariantCulture));
             case float f:
                 return new FloatDataType(f);
             case bool b:
