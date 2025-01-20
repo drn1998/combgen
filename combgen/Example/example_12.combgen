@@ -1,0 +1,12 @@
+$material = { ["Aluminium"; "2.71"],
+              ["Iron"; "7.874"],
+              ["Copper"; "8.96"],
+              ["Vanadium"; "6.099"] };
+
+$outer_sphere_radius = mknum(20.0 - 35.0, 1.5);
+$thickness = mknum(0.8 - 2.5, 0.1); 
+  
+< "A hollow sphere with an outer diameter of " . 2.0 * $outer_sphere_radius . " cm and a thickness of " .
+  $thickness . " cm made of " . $material[0] . " has a weight of " .
+  ((sphere_vol($outer_sphere_radius) - sphere_vol($outer_sphere_radius - $thickness)) * FLOAT($material[1])) / 1000.0 .
+  " kg" >
